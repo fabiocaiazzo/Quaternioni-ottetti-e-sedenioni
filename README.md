@@ -1,4 +1,4 @@
-Questo progetto è stato ideato e sviluppato interamente da Fabio Caiazzo. Rappresenta uno strumento interattivo per la visualizzazione di quaternioni, ottetti e sedenioni.
+Questo progetto è stato ideato da Fabio Caiazzo ed è stato realizzato con il supporto di strumenti di intelligenza artificiale, che hanno assistito nella scrittura del codice sulla base delle specifiche fornite dall'autore.
 
 MANUALE UTENTE: VISUALIZZATORE E CALCOLATRICE ALGEBRICA
 Quaternioni, Ottetti e Sedenioni
