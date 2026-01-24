@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sedenioni v8.2</title>
+    <title>Sedenioni v9.2</title>
     <style>
         body { margin: 0; overflow: hidden; background-color: #1a1a1a; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
@@ -56,31 +56,64 @@
         .ui-btn.active { background: rgba(0, 136, 255, 0.8); border-color: #00aaff; color: white; }
         .icon-svg { width: 24px; height: 24px; fill: currentColor; }
 
-        /* --- MENU IMPOSTAZIONI --- */
+        /* FIX UX: Impedisce la selezione del testo (effetto blu) su pulsanti e titoli */
+        .ui-btn, #main-title, .tab-btn, .triplet-btn, .zerodiv-btn, .setting-action, .menu-btn, #sidebar-resizer {
+            -webkit-user-select: none; /* Safari */
+            -moz-user-select: none;    /* Firefox */
+            -ms-user-select: none;     /* IE10+/Edge */
+            user-select: none;         /* Standard */
+        }
+
+        /* --- MENU IMPOSTAZIONI PRO --- */
         #settings-menu {
-            position: absolute; top: 55px; left: 0;
-            background: rgba(30, 30, 35, 0.95);
-            border: 1px solid #555; border-radius: 8px;
-            padding: 15px; width: 220px;
+            position: absolute; top: 65px; left: 10px;
+            background: rgba(28, 28, 32, 0.98);
+            border: 1px solid #444; border-radius: 8px;
+            padding: 12px; width: 240px;
             display: none; flex-direction: column; gap: 12px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            backdrop-filter: blur(12px); z-index: 200;
         }
-        #settings-menu.visible { display: flex; }
+        #settings-menu.visible { display: flex; animation: fadeInMenu 0.2s ease-out; }
+        @keyframes fadeInMenu { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         
-        .setting-row { display: flex; justify-content: space-between; align-items: center; color: #ccc; font-size: 13px; }
-        .setting-action { 
-            background: #444; border: none; color: white; padding: 6px 10px; border-radius: 4px; cursor: pointer; flex: 1; margin-left: 5px;
-            text-align: center; font-size: 12px;
+        .menu-btn {
+            background: #333; border: 1px solid #444; color: #eee;
+            padding: 10px; border-radius: 6px; cursor: pointer;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 5px; transition: all 0.2s; height: 60px;
         }
-        #help-btn-trigger {
-            background: #00aaff; color: white; border-radius: 50% !important; 
-            width: 32px !important; height: 32px !important; 
-            padding: 0; display: flex; align-items: center; justify-content: center; 
-            font-weight: bold; flex: 0 0 32px; border: none;
-            box-shadow: 0 0 10px rgba(0, 170, 255, 0.4);
+        .menu-btn:hover { background: #444; border-color: #0088ff; color: white; }
+        .menu-btn:active { transform: scale(0.96); }
+        .menu-btn svg { width: 20px; height: 20px; fill: currentColor; }
+        .menu-btn span { font-size: 11px; font-weight: 500; }
+
+        .menu-btn.full-width { grid-column: span 2; flex-direction: row; height: 40px; gap: 10px; }
+
+        .setting-row { display: flex; align-items: center; gap: 10px; color: #aaa; font-size: 11px; padding-top: 8px; border-top: 1px solid #333; margin-top: 5px; }
+        
+        /* Play/Pause Button Style */
+        #play-pause-btn {
+            width: 32px; height: 32px; flex-shrink: 0;
+            background: #2a2a30; border: 1px solid #555; border-radius: 50%;
+            color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            padding: 0; /* Rimuove padding default */
         }
-        #help-btn-trigger:hover { background: #33aaff; transform: scale(1.1); }
+        #play-pause-btn:hover { background: #444; border-color: #0088ff; color: #0088ff; transform: scale(1.05); }
+        #play-pause-btn svg { width: 14px; height: 14px; fill: currentColor; }
+        
+        /* Slider Customization */
+        input[type=range] { -webkit-appearance: none; background: transparent; flex: 1; min-width: 0; }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 14px; width: 14px; border-radius: 50%;
+            background: #0088ff; cursor: pointer; margin-top: -5px; box-shadow: 0 0 5px rgba(0,136,255,0.5);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 4px; cursor: pointer; background: #444; border-radius: 2px;
+        }
 
         /* --- SIDEBAR --- */
         #sidebar {
@@ -614,20 +647,38 @@
         <div id="canvas-container">
             <div id="top-bar">
                 <div class="bar-group">
-                    <div id="settings-toggle-btn" class="ui-btn" title="Impostazioni">⚙️</div>
+                    <div id="settings-toggle-btn" class="ui-btn" title="Impostazioni">
+                        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.49l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.43-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
+                    </div>
                     <div id="settings-menu">
-                        <div style="display:flex; flex-direction: column; gap:10px; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid #444;">
-                            <div style="display:flex; align-items:center; justify-content: space-between;">
-                                <button id="home-btn" class="setting-action" style="display:flex; align-items:center; gap:8px; padding:8px; flex:1;">🏠 <span>Reset Vista</span></button>
-                                <button id="help-btn-trigger" title="Guida">?</button>
-                            </div>
-                            <button id="theme-btn" class="setting-action" style="display:flex; align-items:center; gap:8px; padding:8px; justify-content:center;">🎨 <span>Cambia Tema</span></button>
+                        <div class="menu-grid">
+                            <button id="home-btn" class="menu-btn" title="Reset Camera">
+                                <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                                <span>Reset Vista</span>
+                            </button>
+                            
+                            <button id="help-btn-trigger" class="menu-btn" title="Apri Guida">
+                                <svg viewBox="0 0 24 24"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
+                                <span>Guida</span>
+                            </button>
+                            
+                            <button id="theme-btn" class="menu-btn full-width" title="Cambia stile grafico">
+                                <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0 0 18c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                                <span id="theme-label">Tema: Default</span>
+                            </button>
                         </div>
 
                         <div class="setting-row">
-                            <span>Velocità</span>
-                            <button id="play-pause-btn" class="setting-action" style="flex:none; width:auto; padding:4px 8px; margin:0 5px; font-size:11px;">Pausa ❚❚</button>
-                            <input type="range" id="speed-slider" min="0" max="2" step="0.1" value="0.3" style="width:60px; accent-color:#0f8;">
+                            <button id="play-pause-btn" title="Play/Pausa">
+                                <svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                            </button>
+                            <div style="display:flex; flex-direction:column; flex:1;">
+                                <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+                                    <span style="font-weight:600; font-size:10px; letter-spacing:0.5px;">VELOCITÀ</span>
+                                    <span id="speed-val" style="font-size:10px; color:#0088ff;">0.3x</span>
+                                </div>
+                                <input type="range" id="speed-slider" min="0" max="2" step="0.1" value="0.3">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -647,7 +698,13 @@
                 <button id="close-sidebar-btn" title="Chiudi">&times;</button>
             </div>
             <div id="tab-triplets" class="tab-content active">
-                <div style="padding:10px; border-bottom:1px solid #444; text-align:right;"><button id="show-all-btn" style="background:#008855; border:none; color:white; padding:5px 10px; border-radius:4px; cursor:pointer;">Mostra Tutto</button></div>
+                <div style="padding:10px; border-bottom:1px solid #444; display:grid; grid-template-columns: 1fr auto 1fr; align-items:center;">
+                    <div></div> <button id="sidebar-alg-toggle" style="background:transparent; border:1px solid #555; color:#eee; width:32px; height:32px; border-radius:6px; font-family:'Times New Roman'; font-weight:bold; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s;" title="Cambia Dimensione">
+                        &#x1D54A;
+                    </button>
+
+                    <button id="show-all-btn" style="background:#008855; border:none; color:white; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:11px; justify-self: end; font-weight:600;">Mostra Tutto</button>
+                </div>
                 <div id="triplets-scroll"><div class="triplets-grid" id="buttons-container"></div></div>
             </div>
             <div id="tab-zerodiv" class="tab-content"><div id="zerodiv-scroll"><div id="zerodiv-grid"></div></div></div>
@@ -749,55 +806,145 @@
             }
         }
 
+        // Funzione che gestisce la visualizzazione 3D basata sulla selezione Tabella
+        function updateTableVis() {
+            const r = tableState.activeRow;
+            const c = tableState.activeCol;
+
+            // 1. Nessuna selezione: Reset vista completa
+            if (r === null && c === null) {
+                resetView();
+                return;
+            }
+
+            // 2. Doppia selezione (Riga E Colonna): Isola il ciclo comune
+            if (r !== null && c !== null) {
+                // Se sono uguali o coinvolgono l'identità (0), resetta o mostra solo i punti
+                if (r === 0 || c === 0 || r === c) {
+                    resetView(); 
+                } else {
+                    // Cerca la tripletta che contiene entrambi
+                    const idx = POSITIVE_TRIPLETS.findIndex(t => t.includes(r) && t.includes(c));
+                    if (idx !== -1) {
+                        highlightSingleTriplet(idx);
+                    } else {
+                        // Se non formano un ciclo (es. Divisori Zero), nascondi le linee e mostra solo i due punti
+                        tripletVisuals.forEach(t => { 
+                            t.mesh.visible = false; 
+                            if(t.hitMesh) t.hitMesh.visible = false; 
+                        });
+                        for(let k in pointObjects) {
+                            const id = parseInt(k);
+                            const visible = (id === r || id === c);
+                            pointObjects[k].mesh.visible = visible;
+                            pointObjects[k].label.visible = visible;
+                        }
+                    }
+                }
+                return;
+            }
+
+            // 3. Singola selezione (Solo Riga O Solo Colonna): Isola tutti i cicli connessi
+            const val = (r !== null) ? r : c;
+            if (val === 0) resetView(); // L'identità è ovunque, resettiamo per non creare confusione
+            else highlightConnections(val);
+        }
+
         function buildTable(limitIndex) {
             const table = document.getElementById('sedenion-table');
-            table.innerHTML = ''; 
-            const thead = document.createElement('tr');
-            const corner = document.createElement('th');
-            corner.innerHTML = "&times;"; 
-            corner.classList.add("first-col");
-            corner.onclick = () => { tableState.activeRow=null; tableState.activeCol=null; buildTable(limitIndex); };
-            thead.appendChild(corner);
             
-            for(let i=0; i<=limitIndex; i++) {
-                const th = document.createElement('th');
-                th.innerHTML = i === 0 ? "1" : "e<sub>" + i + "</sub>";
-                if(i === tableState.activeCol) th.classList.add('header-active');
-                th.onclick = () => { tableState.activeCol = (tableState.activeCol === i) ? null : i; buildTable(limitIndex); };
-                thead.appendChild(th);
-            }
-            table.appendChild(thead);
+            // OPTIMIZATION: Ricostruisci il DOM solo se cambia dimensione (cambio algebra)
+            const neededRows = limitIndex + 2; // 1 header + (limitIndex+1) righe dati
+            const needsRebuild = table.rows.length !== neededRows;
 
+            if (needsRebuild) {
+                table.innerHTML = ''; 
+                const thead = document.createElement('tr');
+                const corner = document.createElement('th');
+                corner.innerHTML = "&times;"; 
+                corner.classList.add("first-col");
+                corner.onclick = () => { 
+                    tableState.activeRow=null; 
+                    tableState.activeCol=null; 
+                    buildTable(limitIndex); 
+                    updateTableVis(); 
+                };
+                thead.appendChild(corner);
+                
+                for(let i=0; i<=limitIndex; i++) {
+                    const th = document.createElement('th');
+                    th.innerHTML = i === 0 ? "1" : "e<sub>" + i + "</sub>";
+                    th.onclick = () => { 
+                        tableState.activeCol = (tableState.activeCol === i) ? null : i; 
+                        buildTable(limitIndex); 
+                        updateTableVis(); 
+                    };
+                    thead.appendChild(th);
+                }
+                table.appendChild(thead);
+
+                for(let r=0; r<=limitIndex; r++) {
+                    const tr = document.createElement('tr');
+                    const thRow = document.createElement('td');
+                    thRow.innerHTML = r === 0 ? "1" : "e<sub>" + r + "</sub>";
+                    thRow.classList.add("first-col");
+                    thRow.onclick = () => { 
+                        tableState.activeRow = (tableState.activeRow === r) ? null : r; 
+                        buildTable(limitIndex); 
+                        updateTableVis(); 
+                    };
+                    tr.appendChild(thRow);
+
+                    for(let c=0; c<=limitIndex; c++) {
+                        const td = document.createElement('td');
+                        const val = tableRaw[r][c];
+                        const style = tableColors[indexToColorKey[getBaseIndex(val)]];
+                        td.innerHTML = formatLatex(val);
+                        td.style.backgroundColor = style.bg;
+                        td.style.color = style.fg;
+                        td.onclick = () => activateTripletFromTable(r, c);
+                        tr.appendChild(td);
+                    }
+                    table.appendChild(tr);
+                }
+            }
+
+            // AGGIORNAMENTO CLASSI (Veloce, senza toccare innerHTML)
+            // 1. Pulisci tutto
+            table.querySelectorAll('.header-active, .table-intersect, .table-highlight').forEach(el => {
+                el.classList.remove('header-active', 'table-intersect', 'table-highlight');
+            });
+
+            // 2. Applica Highlight Header Colonna
+            if (tableState.activeCol !== null) {
+                if(table.rows[0].cells[tableState.activeCol + 1])
+                    table.rows[0].cells[tableState.activeCol + 1].classList.add('header-active');
+            }
+
+            // 3. Applica Highlight Righe e Celle
             for(let r=0; r<=limitIndex; r++) {
-                const tr = document.createElement('tr');
-                const thRow = document.createElement('td');
-                thRow.innerHTML = r === 0 ? "1" : "e<sub>" + r + "</sub>";
-                thRow.classList.add("first-col");
-                if(r === tableState.activeRow) thRow.classList.add('header-active');
-                thRow.onclick = () => { tableState.activeRow = (tableState.activeRow === r) ? null : r; buildTable(limitIndex); };
-                tr.appendChild(thRow);
+                const tr = table.rows[r+1];
+                if(!tr) continue;
+
+                // Header Riga
+                if (r === tableState.activeRow) {
+                    tr.cells[0].classList.add('header-active');
+                }
 
                 for(let c=0; c<=limitIndex; c++) {
-                    const td = document.createElement('td');
-                    const val = tableRaw[r][c];
-                    const style = tableColors[indexToColorKey[getBaseIndex(val)]];
-                    td.innerHTML = formatLatex(val);
-                    td.style.backgroundColor = style.bg;
-                    td.style.color = style.fg;
+                    const td = tr.cells[c+1];
+                    if(!td) continue;
 
-                    let isDimmed = false;
                     if (tableState.activeRow !== null || tableState.activeCol !== null) {
                         const rowMatch = (tableState.activeRow === r);
                         const colMatch = (tableState.activeCol === c);
                         if (rowMatch && colMatch) td.classList.add('table-intersect');
                         else if (!rowMatch && !colMatch) td.classList.add('table-highlight');
                     }
-                    td.onclick = () => activateTripletFromTable(r, c);
-                    tr.appendChild(td);
                 }
-                table.appendChild(tr);
             }
         }
+
 
         // --- 3D SCENE ---
         const container = document.getElementById('canvas-container');
@@ -853,7 +1000,8 @@
         pts[8] = new THREE.Vector3().addVectors(v_e5, v_e6).add(v_e7).add(v_e12).multiplyScalar(0.25);
 
         const pointObjects = {}; 
-        const sphereGeom = new THREE.SphereGeometry(0.22, 16, 16);
+        // OTTIMIZZAZIONE: Ridotti segmenti da 16 a 10/8 (molto più leggero per 16 sfere)
+        const sphereGeom = new THREE.SphereGeometry(0.22, 10, 8); 
         const sphereMat = new THREE.MeshPhysicalMaterial({ color: 0xaaaaaa, metalness: 0.2, roughness: 0.4 });
         const sphereMatCenter = new THREE.MeshPhysicalMaterial({ color: 0xffdd00, metalness: 0.2, roughness: 0.4 });
 
@@ -873,8 +1021,10 @@
 
         // --- SHADER PATHS ---
         const flowVertexShader = `
+            precision mediump float;
             varying vec2 vUv;
-            void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }
+            void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
         `;
         const flowFragmentShader = `
             uniform vec3 color; uniform float customTime; uniform float flowDir; varying vec2 vUv;
@@ -892,21 +1042,26 @@
         function createTripletPath(triplet, colorHex) {
             const [i1, i2, i3] = triplet;
             const p1 = pts[i1], p2 = pts[i2], p3 = pts[i3];
-            let points = [];
-            let isOpenCurve = false; 
+            let curve;
+            let isOpenCurve = false;
             const v12 = new THREE.Vector3().subVectors(p2, p1);
             const v13 = new THREE.Vector3().subVectors(p3, p1);
             const normal = new THREE.Vector3().crossVectors(v12, v13);
             const isCollinear = normal.lengthSq() < 0.001;
 
             if (isCollinear) {
-                isOpenCurve = true; 
+                // FIX: Usa LineCurve3 per linee rette perfette ed evita artefatti grafici
+                isOpenCurve = true;
                 const d12 = p1.distanceTo(p2); const d23 = p2.distanceTo(p3); const d31 = p3.distanceTo(p1);
-                if (d12 >= d23 && d12 >= d31) points.push(p1, p3, p2);
-                else if (d23 >= d12 && d23 >= d31) points.push(p2, p1, p3);
-                else points.push(p3, p2, p1);
+                
+                // Crea una linea diretta tra i due estremi più lontani
+                if (d12 >= d23 && d12 >= d31) curve = new THREE.LineCurve3(p1, p2);
+                else if (d23 >= d12 && d23 >= d31) curve = new THREE.LineCurve3(p2, p3);
+                else curve = new THREE.LineCurve3(p3, p1);
+                
             } else {
-                isOpenCurve = false; 
+                isOpenCurve = false;
+                let points = [];
                 const axisZ = normal.normalize(); 
                 const v1 = new THREE.Vector3().subVectors(p2, p1);
                 const v2 = new THREE.Vector3().subVectors(p3, p1);
@@ -921,9 +1076,10 @@
                     const theta = (i / 64) * Math.PI * 2;
                     points.push(new THREE.Vector3().copy(Center).add(axisX.clone().multiplyScalar(Radius * Math.cos(theta))).add(axisY.clone().multiplyScalar(Radius * Math.sin(theta))));
                 }
+                curve = new THREE.CatmullRomCurve3(points, true, 'catmullrom', 0.5);
             }
-            const curve = new THREE.CatmullRomCurve3(points, !isOpenCurve, 'catmullrom', isCollinear ? 1.0 : 0.5);
-            const tubeGeom = new THREE.TubeGeometry(curve, 256, 0.035, 8, !isOpenCurve);
+            // OTTIMIZZAZIONE: Segmenti ridotti da 256->64 e raggio da 8->4. Risparmio memoria GPU enorme.
+            const tubeGeom = new THREE.TubeGeometry(curve, 64, 0.035, 4, !isOpenCurve);
             const material = new THREE.ShaderMaterial({
                 uniforms: { customTime: { value: 0 }, color: { value: new THREE.Color(colorHex) }, flowDir: { value: isCollinear ? -1.0 : 1.0 } },
                 vertexShader: flowVertexShader, fragmentShader: flowFragmentShader,
@@ -933,8 +1089,8 @@
             const mesh = new THREE.Mesh(tubeGeom, material);
             scene.add(mesh);
 
-            // HITBOX: Creiamo un tubo invisibile ma molto più largo (0.25 vs 0.035) per il mouse
-            const hitGeom = new THREE.TubeGeometry(curve, 64, 0.25, 8, !isOpenCurve); 
+            // HITBOX: Geometria super low-poly per il rilevamento mouse
+            const hitGeom = new THREE.TubeGeometry(curve, 32, 0.25, 3, !isOpenCurve); 
             // Materiale trasparente (opacity: 0)
             const hitMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false });
             const hitMesh = new THREE.Mesh(hitGeom, hitMat);
@@ -948,6 +1104,7 @@
         const titleElem = document.getElementById('main-title');
         const tripletButtons = [];
         const btnAlgToggle = document.getElementById('btn-alg-toggle');
+        const sidebarAlgToggle = document.getElementById('sidebar-alg-toggle'); // Nuovo bottone
         let currentAlgState = 15;
 
 	// --- FORMULA DEMO LOGIC ---
@@ -980,14 +1137,26 @@
                 else if (currentAlgState === 7) currentAlgState = 15;
                 else currentAlgState = 3;
             }
-            if (currentAlgState === 3) btnAlgToggle.innerHTML = "&#x210D;";
-            else if (currentAlgState === 7) btnAlgToggle.innerHTML = "&#x1D546;";
-            else btnAlgToggle.innerHTML = "&#x1D54A;";
+            
+            // Determina il simbolo corretto
+            let symbol = "";
+            if (currentAlgState === 3) symbol = "&#x210D;";       // H
+            else if (currentAlgState === 7) symbol = "&#x1D546;"; // O
+            else symbol = "&#x1D54A;";                            // S
+
+            // Aggiorna entrambi i pulsanti (Top Bar e Sidebar)
+            btnAlgToggle.innerHTML = symbol;
+            if(sidebarAlgToggle) sidebarAlgToggle.innerHTML = symbol;
+
             filterSubspace(currentAlgState);
+            
+            // Forza render (per la versione ottimizzata)
+            if(typeof forceUpdate === 'function') forceUpdate();
         }
         
         filterSubspace(15);
         btnAlgToggle.addEventListener('click', () => updateAlgebraState(null));
+        if(sidebarAlgToggle) sidebarAlgToggle.addEventListener('click', () => updateAlgebraState(null));
 
         function filterSubspace(limitIndex) {
             if(limitIndex===3) titleElem.innerText = "Quaternioni";
@@ -1076,16 +1245,36 @@
             }
         });
 
-        document.getElementById('speed-slider').addEventListener('input', (e) => animParams.speed = parseFloat(e.target.value));
-        document.getElementById('home-btn').addEventListener('click', () => { camera.position.copy(initialCameraPos); controls.target.set(0,3,0); });
+        const speedLabel = document.getElementById('speed-val');
+        document.getElementById('speed-slider').addEventListener('input', (e) => {
+            animParams.speed = parseFloat(e.target.value);
+            if(speedLabel) speedLabel.innerText = animParams.speed + 'x';
+        });
+
+        document.getElementById('home-btn').addEventListener('click', () => { 
+            camera.position.copy(initialCameraPos); controls.target.set(0,3,0); 
+            // Reset vista richiede aggiornamento render nella versione ottimizzata
+            if(typeof forceUpdate === 'function') forceUpdate();
+        });
+
         const playBtn = document.getElementById('play-pause-btn');
+        // Icone SVG costanti
+        const iconPlay = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'; // Triangolo
+        const iconPause = '<svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>'; // Barre
+
         playBtn.addEventListener('click', () => {
             animParams.paused = !animParams.paused;
-            playBtn.innerText = animParams.paused ? "Play ▶" : "Pausa ❚❚";
+            // Scambia l'icona interna invece del testo
+            playBtn.innerHTML = animParams.paused ? iconPlay : iconPause;
+            // Se riprendiamo, forza il render loop
+            if(!animParams.paused && typeof forceUpdate === 'function') forceUpdate();
         });
         
         let currentTheme = 0;
+        const themeNames = ["Default", "Deep Space", "Studio Light", "Griglia Tecnica", "Stellato"];
         const themeBtn = document.getElementById('theme-btn');
+        const themeLabel = document.getElementById('theme-label');
+        
         const gridHelper = new THREE.GridHelper(60, 30, 0x444444, 0x111111); gridHelper.visible = false; gridHelper.position.y = -8; scene.add(gridHelper);
         const starsCount = 1000; const starsGeo = new THREE.BufferGeometry(); const starsPos = new Float32Array(starsCount*3);
         for(let i=0; i<starsCount*3; i++) starsPos[i] = (Math.random()-0.5)*100;
@@ -1094,10 +1283,12 @@
 
         themeBtn.addEventListener('click', () => {
             currentTheme = (currentTheme + 1) % 5;
+            
+            // Aggiorna l'etichetta del pulsante
+            themeLabel.innerText = "Tema: " + themeNames[currentTheme];
+
             scene.background = null; gridHelper.visible = false; starField.visible = false; 
             container.className = ''; scene.fog = null;
-            
-            // Reset stile inline per i gradienti CSS
             container.style.background = ''; 
 
             if(currentTheme === 0) { 
@@ -1108,7 +1299,6 @@
             else if(currentTheme === 1) { 
                 container.classList.add('bg-deep-space'); 
                 scene.fog = new THREE.FogExp2(0x101020, 0.015); 
-                // Qui non impostiamo backgroundColor perché c'è la classe CSS col gradiente
             }
             else if(currentTheme === 2) { 
                 container.classList.add('bg-studio'); 
@@ -1125,6 +1315,9 @@
                 starField.visible = true; 
                 container.style.backgroundColor = '#' + col.toString(16).padStart(6, '0');
             }
+            
+            // Forza render dopo il cambio tema (per la versione ottimizzata)
+            if(typeof forceUpdate === 'function') forceUpdate();
         });
 
         // Sidebar
@@ -1760,7 +1953,6 @@ function validateAssociativity(exprStr) {
             inputGrid.innerHTML = '';
             for(let i=0; i<=15; i++) {
                 const l = i===0 ? '1' : 'e'+i;
-                // MODIFICA: Bordo giallo per la parte scalare (indice 0)
                 const customStyle = i === 0 ? 'border-color: #ffcc00;' : '';
                 
                 inputGrid.innerHTML += `
@@ -1770,31 +1962,33 @@ function validateAssociativity(exprStr) {
                     </div>`;
             }
 
-            // Logica Navigazione Frecce
-            const inputs = inputGrid.querySelectorAll('.num-input');
-            inputs.forEach(inp => {
-                inp.addEventListener('keydown', (e) => {
-                    const idx = parseInt(inp.dataset.idx);
+            // OPTIMIZATION: Event Delegation (Un solo listener invece di 16)
+            // Controlla se abbiamo già attaccato l'evento per evitare duplicati
+            if (!inputGrid.hasAttribute('data-listener-attached')) {
+                inputGrid.addEventListener('keydown', (e) => {
+                    // Agisce solo se il target è un input numerico
+                    if (!e.target.classList.contains('num-input')) return;
+
+                    const idx = parseInt(e.target.dataset.idx);
                     let dest = null;
                     
                     if(e.key === 'ArrowRight') dest = idx + 1;
                     else if(e.key === 'ArrowLeft') dest = idx - 1;
-                    else if(e.key === 'ArrowDown') dest = idx + 4; // Salta alla riga sotto (griglia 4 colonne)
-                    else if(e.key === 'ArrowUp') dest = idx - 4;   // Salta alla riga sopra
+                    else if(e.key === 'ArrowDown') dest = idx + 4;
+                    else if(e.key === 'ArrowUp') dest = idx - 4;
                     else return;
 
-                    // Verifica limiti e visibilità
                     if(dest !== null && dest >= 0 && dest <= 15) {
                         const targetEl = document.querySelector(`.num-input[data-idx="${dest}"]`);
-                        // Naviga solo se l'input target esiste ed è visibile (non nascosto dal filtro algebra)
                         if(targetEl && !targetEl.parentElement.classList.contains('hidden')) {
                             e.preventDefault();
                             targetEl.focus();
-                            targetEl.select(); // Seleziona il testo per sovrascrittura rapida
+                            targetEl.select();
                         }
                     }
                 });
-            });
+                inputGrid.setAttribute('data-listener-attached', 'true');
+            }
 
             updateGridVisibility();
         }
@@ -1898,6 +2092,14 @@ window.calcBracket = function() {
         const historyOverlay = document.getElementById('history-overlay');
         const toggleHistoryBtn = document.getElementById('toggle-history-btn');
         toggleHistoryBtn.addEventListener('click', () => { historyOverlay.classList.toggle('open'); toggleHistoryBtn.classList.toggle('active'); });
+
+// Gestione tasto Invio per la calcolatrice
+document.getElementById('expression-display').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        calcAction('eval');
+    }
+});
 
         window.calcAction = function(action) {
             const disp = document.getElementById('expression-display');
@@ -2003,6 +2205,11 @@ window.calcBracket = function() {
             if (!isOpen) {
                 calcModal.classList.add('active');
                 calcToggle.classList.add('active');
+                
+                // FIX: Chiude sempre la cronologia all'apertura
+                historyOverlay.classList.remove('open');
+                toggleHistoryBtn.classList.remove('active');
+
                 calcAlgSelect.value = currentAlgState; 
                 updateGridVisibility();
                 
@@ -2025,7 +2232,12 @@ window.calcBracket = function() {
                 // Apri
                 calcModal.classList.add('active');
                 calcToggle.classList.add('active'); // Colore blu
-                calcAlgSelect.value = currentAlgState; 
+                
+                // FIX: Chiude sempre la cronologia all'apertura
+                historyOverlay.classList.remove('open');
+                toggleHistoryBtn.classList.remove('active');
+
+                calcAlgSelect.value = currentAlgState;
                 updateGridVisibility();
                 
                 // Reset posizione al centro se non è mai stata mossa (opzionale)
@@ -2167,22 +2379,17 @@ window.calcBracket = function() {
                 }
             }
 
-            // Cicli (Usa HITMESH per il rilevamento)
-            tripletVisuals.forEach((tVal, idx) => {
-                // Se la hitbox esiste ed è visibile, la usiamo per il click
-                const target = (tVal.hitMesh && tVal.hitMesh.visible) ? tVal.hitMesh : (tVal.mesh.visible ? tVal.mesh : null);
-                if(target) {
-                    visibleMeshes.push(target);
-                    meshData.set(target, { type: 'triplet', id: idx });
-                }
-            });
-
+            // Ora solo i punti vengono aggiunti a visibleMeshes
+            
             const intersects = raycaster.intersectObjects(visibleMeshes);
             if(intersects.length > 0) {
                 const data = meshData.get(intersects[0].object);
-                if(data.type === 'point') highlightConnections(data.id);
-                else if (data.type === 'triplet') highlightSingleTriplet(data.id);
-                isHoldingPoint = true;
+                
+                // Mantiene attiva solo l'evidenziazione dei punti
+                if(data.type === 'point') {
+                    highlightConnections(data.id);
+                    isHoldingPoint = true;
+                }
             }
         });
 
@@ -2254,18 +2461,59 @@ window.calcBracket = function() {
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
         });
 
+        // --- OTTIMIZZAZIONE LOOP DI RENDERING ---
+        let renderRequested = true; // Flag per forzare il render
+        
+        // Renderizza solo quando la camera si muove
+        controls.addEventListener('change', () => { renderRequested = true; });
+        
+        // Renderizza quando si ridimensiona la finestra
+        window.addEventListener('resize', () => { renderRequested = true; });
+        
+        // Renderizza quando si interagisce con la UI (click generico)
+        window.addEventListener('pointerup', () => { renderRequested = true; setTimeout(()=> renderRequested=true, 100); });
+        
+        // Renderizza quando si preme un tasto (es. calcolatrice)
+        window.addEventListener('keydown', () => { renderRequested = true; });
+
+        // Forza render quando cambia la UI laterale o i menu
+        const forceUpdate = () => { renderRequested = true; };
+        document.querySelectorAll('.tab-btn, .triplet-btn, .ui-btn, .setting-action').forEach(b => {
+            b.addEventListener('click', forceUpdate);
+        });
+
         const clock = new THREE.Clock();
+        
         function animate() {
             requestAnimationFrame(animate);
-            const delta = clock.getDelta();
-            if (!animParams.paused) animParams.customTime += delta * animParams.speed;
-            animatedMaterials.forEach(mat => mat.uniforms.customTime.value = animParams.customTime);
-            if(starField.visible) { starField.rotation.y += 0.0003; }
-            controls.update();
-            renderer.render(scene, camera);
-            labelRenderer.render(scene, camera);
+            
+            const delta = Math.min(clock.getDelta(), 0.1);
+            let needsRender = renderRequested;
+
+            // Se l'animazione NON è in pausa e la velocità > 0, dobbiamo renderizzare sempre
+            if (!animParams.paused && animParams.speed > 0) {
+                animParams.customTime += delta * animParams.speed;
+                animatedMaterials.forEach(mat => mat.uniforms.customTime.value = animParams.customTime);
+                needsRender = true;
+            }
+
+            // Animazione sfondo stellato (se attivo)
+            if(starField.visible) { 
+                starField.rotation.y += 0.0003; 
+                if(!animParams.paused) needsRender = true; 
+            }
+
+            // Se necessario, aggiorna i controlli e renderizza
+            if (needsRender) {
+                controls.update();
+                renderer.render(scene, camera);
+                labelRenderer.render(scene, camera);
+                renderRequested = false; // Reset flag
+            }
         }
         animate();
+        // Forza un render iniziale
+        renderRequested = true;
     </script>
 </body>
 </html>
