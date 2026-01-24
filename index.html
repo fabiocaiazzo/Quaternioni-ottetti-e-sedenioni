@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sedenioni v7.0 - Stable</title>
+    <title>Sedenioni v8.2</title>
     <style>
         body { margin: 0; overflow: hidden; background-color: #1a1a1a; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
@@ -74,9 +74,11 @@
             text-align: center; font-size: 12px;
         }
         #help-btn-trigger {
-            background: #0088ff; color: white; border-radius: 50%; width: 24px; height: 24px; 
+            background: #00aaff; color: white; border-radius: 50% !important; 
+            width: 32px !important; height: 32px !important; 
             padding: 0; display: flex; align-items: center; justify-content: center; 
-            font-weight: bold; flex: 0 0 24px;
+            font-weight: bold; flex: 0 0 32px; border: none;
+            box-shadow: 0 0 10px rgba(0, 170, 255, 0.4);
         }
         #help-btn-trigger:hover { background: #33aaff; transform: scale(1.1); }
 
@@ -88,12 +90,53 @@
             display: flex;
             flex-direction: column;
             transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-            overflow: hidden;
+            overflow: visible; 
             flex-shrink: 0;
             z-index: 100;
             position: relative;
         }
         #sidebar.open { width: 450px; }
+        
+        /* --- RESIZER MINIMAL --- */
+        #sidebar-resizer {
+            /* Posizionato a cavallo del bordo sinistro - AREA RIDOTTA per non coprire la tabella */
+            position: absolute; 
+            top: 40px; /* Spostato all'altezza corretta dei comandi */
+            left: -20px; 
+            height: 60px; /* Altezza limitata, non copre più tutta la colonna */
+            width: 40px;
+            cursor: ew-resize; z-index: 150;
+            background: transparent;
+            display: flex; align-items: center; justify-content: center;
+            touch-action: none; 
+        }
+
+        /* La linea verticale blu (sottile e discreta) */
+        #sidebar-resizer::before {
+            content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 2px;
+            background-color: #0088ff; transform: translateX(-50%);
+            opacity: 0.5; transition: opacity 0.2s;
+        }
+
+        /* La maniglia centrale (pillola piccola senza frecce) */
+        #sidebar-resizer::after {
+            content: ''; 
+            width: 6px; height: 24px; /* Molto più piccolo e stretto */
+            background: #0088ff; 
+            border-radius: 10px; /* Forma a pillola */
+            position: absolute; left: 50%; transform: translateX(-50%);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+            transition: all 0.2s;
+            z-index: 151;
+        }
+
+        /* Effetti Hover: diventa più luminoso e leggermente più alto */
+        #sidebar-resizer:hover::before, #sidebar-resizer.active::before { opacity: 1; }
+        #sidebar-resizer:hover::after, #sidebar-resizer.active::after {
+            height: 32px; background: #33aaff; transform: translateX(-50%) scale(1.1);
+        }
+        /* ------------------------ */
+
         @media (max-width: 600px) {
             #sidebar.open { width: 100vw; position: absolute; height: 100%; right: 0; }
         }
@@ -115,7 +158,13 @@
             font-size: 18px; cursor: pointer;
         }
 
-        .tab-content { flex: 1; overflow: hidden; display: none; flex-direction: column; }
+        .tab-content { 
+            flex: 1; 
+            min-height: 0; 
+            overflow: hidden; 
+            display: none; 
+            flex-direction: column; 
+        }
         .tab-content.active { display: flex; }
 
         #triplets-scroll { flex: 1; overflow-y: auto; padding: 10px; }
@@ -144,7 +193,24 @@
         .zerodiv-btn sub { font-size: 0.7em; vertical-align: baseline; position: relative; top: 0.3em; margin-left: 1px; }
 
         /* --- TABLE STYLES --- */
-        #table-scroll { flex: 1; overflow: auto; padding: 0; background: #fff; position:relative; }
+        #table-scroll { 
+            flex: 0 0 auto; 
+            overflow: auto; 
+            height: 300px; /* Altezza iniziale di default */
+            min-height: 50px;
+            padding: 0; 
+            background: #202025; 
+            position: relative; 
+            transition: none !important; /* Disabilita animazioni durante il resize */
+        }
+        #tab-table {
+            overflow-y: auto;
+            display: none;
+            flex-direction: column;
+        }
+        #tab-table.active {
+            display: flex;
+        }
         #sedenion-table {
             border-collapse: separate; border-spacing: 0;
             font-family: 'Times New Roman', serif; font-size: 11px; table-layout: fixed;
@@ -280,6 +346,55 @@
             pointer-events: none; user-select: none;
         }
 
+        /* --- FORMULA BUTTONS & HORIZONTAL RESIZER --- */
+        #formula-container { 
+            padding: 10px;
+            background: #1b1b20; 
+            flex: 1;
+            overflow-y: auto;
+            min-height: 50px;
+        }
+        
+        #table-resizer {
+            height: 16px;
+            width: 100%;
+            background: #2a2a30;
+            cursor: ns-resize;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-top: 1px solid #444;
+            border-bottom: 1px solid #444;
+            position: relative;
+            touch-action: none;
+            z-index: 10;
+        }
+
+        #table-resizer::after {
+            content: '';
+            width: 40px;
+            height: 4px;
+            background: #0088ff;
+            border-radius: 2px;
+            box-shadow: 0 0 5px rgba(0, 136, 255, 0.5);
+        }
+
+        #table-resizer:hover::after {
+            background: #33aaff;
+            width: 60px;
+        }
+        .formula-group-title { color: #888; font-size: 11px; margin-bottom: 5px; font-weight: bold; text-transform: uppercase; }
+        .formula-btn {
+            display: block; width: 100%; text-align: left;
+            background: #25252a; color: #ddd;
+            padding: 8px 10px; margin-bottom: 6px;
+            border: 1px solid #444; border-radius: 4px;
+            cursor: pointer; font-family: 'Times New Roman', serif; font-size: 13px; font-style: italic;
+            transition: all 0.2s;
+        }
+        .formula-btn:hover { background: #333; border-color: #0088ff; color: white; transform: translateX(2px); }
+        .formula-btn strong { font-family: 'Segoe UI', sans-serif; font-style: normal; font-size: 11px; color: #0088ff; margin-right: 5px; }
+
         /* --- HELP MODAL --- */
         #help-modal {
             display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -411,9 +526,9 @@
         <div class="calc-header">
             <div class="calc-mode-wrapper">
                 <select id="calc-alg-select" class="calc-mode-sel" title="Seleziona Algebra">
-                    <option value="3">Quaternioni (H)</option>
-                    <option value="7">Ottetti (O)</option>
-                    <option value="15" selected>Sedenioni (S)</option>
+                    <option value="3">Quaternioni (&#x210D;)</option>
+                    <option value="7">Ottetti (&#x1D546;)</option>
+                    <option value="15" selected>Sedenioni (&#x1D54A;)</option>
                 </select>
             </div>
             
@@ -435,7 +550,7 @@
     
         <div class="calc-body">
             <div class="display-area">
-                <input type="text" id="expression-display" placeholder="Espressione..." readonly>
+                <input type="text" id="expression-display" placeholder="Espressione..." autocomplete="off" inputmode="none">
                 <div id="result-display">0</div>
             </div>
     
@@ -444,7 +559,6 @@
                 <div class="var-tab" data-var="b">Var B</div>
                 <div class="var-tab" data-var="c">Var C</div>
                 <div class="var-tab" data-var="d">Var D</div>
-                <div class="var-tab" data-var="e">Var E</div>
             </div>
     
             <div style="margin-bottom: 5px;">
@@ -461,37 +575,37 @@
                 <button class="key-btn key-var" onclick="calcInput('b')">b</button>
                 <button class="key-btn key-var" onclick="calcInput('c')">c</button>
                 <button class="key-btn key-var" onclick="calcInput('d')">d</button>
-                <button class="key-btn key-var" onclick="calcInput('e')">e</button>
+                <button class="key-btn key-var" onclick="calcInput('e_(')" title="Inserisci base">e<sub>n</sub></button>
                 
                 <button class="key-btn" onclick="calcInput('norm(')">|v|</button>
                 <button class="key-btn" onclick="calcInput('inv(')">inv</button>
                 <button class="key-btn" onclick="calcInput('conj(')">cnj</button>
-                <button class="key-btn" onclick="calcInput('(')">(</button>
-                <button class="key-btn" onclick="calcInput(')')">)</button>
+                <button class="key-btn key-op" onclick="calcBracket()" title="Commutatore/Associatore">[x,y]</button>
+                <button class="key-btn" onclick="calcSmartParen()">( )</button>
     
                 <button class="key-btn key-num" onclick="calcInput('7')">7</button>
                 <button class="key-btn key-num" onclick="calcInput('8')">8</button>
                 <button class="key-btn key-num" onclick="calcInput('9')">9</button>
-                <button class="key-btn key-op" onclick="calcInput(' / ')" title="Moltiplicazione Inverso Destro">/</button>
+                <button class="key-btn key-op" onclick="calcInput(' + ')">+</button>
                 <button class="key-btn key-del" onclick="calcAction('back')">⌫</button>
     
                 <button class="key-btn key-num" onclick="calcInput('4')">4</button>
                 <button class="key-btn key-num" onclick="calcInput('5')">5</button>
                 <button class="key-btn key-num" onclick="calcInput('6')">6</button>
-                <button class="key-btn key-op" onclick="calcInput(' * ')">&times;</button>
+                <button class="key-btn key-op" onclick="calcInput(' - ')">-</button>
                 <button class="key-btn key-del" onclick="calcAction('clear')">AC</button>
     
                 <button class="key-btn key-num" onclick="calcInput('1')">1</button>
                 <button class="key-btn key-num" onclick="calcInput('2')">2</button>
                 <button class="key-btn key-num" onclick="calcInput('3')">3</button>
-                <button class="key-btn key-op" onclick="calcInput(' - ')">-</button>
-                <button class="key-btn key-op" onclick="calcInput('comm(')" title="Commutatore [a,b] o Associatore [a,b,c]" style="font-size:11px;">[x,y]</button>
+                <button class="key-btn key-op" onclick="calcInput(' * ')">&times;</button>
+                
+                <button class="key-btn key-eval" onclick="calcAction('eval')" style="grid-row: span 2; height: 100%;">=</button>
     
                 <button class="key-btn key-num" onclick="calcInput('0')">0</button>
                 <button class="key-btn key-num" onclick="calcInput('.')">.</button>
-                <button class="key-btn key-num" onclick="calcInput(',')" title="Separatore argomenti" style="font-weight:bold; font-size:16px;">,</button>
-                <button class="key-btn key-op" onclick="calcInput(' + ')">+</button>
-                <button class="key-btn key-eval" onclick="calcAction('eval')">=</button>
+                <button class="key-btn key-num" onclick="calcInput(',')">,</button>
+                <button class="key-btn key-op" onclick="calcInput(' / ')" title="Divisione">/</button>
             </div>
         </div>
     </div>
@@ -502,26 +616,34 @@
                 <div class="bar-group">
                     <div id="settings-toggle-btn" class="ui-btn" title="Impostazioni">⚙️</div>
                     <div id="settings-menu">
-                        <div class="setting-row"><span>Velocità</span><input type="range" id="speed-slider" min="0" max="2" step="0.1" value="0.3" style="width:80px; accent-color:#0f8;"></div>
-                        <div class="setting-row"><span>Tema</span><button id="theme-btn" class="setting-action">Cambia 🎨</button></div>
-                        <div class="setting-row"><span>Camera</span><button id="home-btn" class="setting-action">Reset 🏠</button></div>
-                        <div class="setting-row"><span>Animazione</span><button id="play-pause-btn" class="setting-action">Pausa ❚❚</button></div>
-                        <div class="setting-row"><span>Supporto</span><button id="help-btn-trigger" class="setting-action">?</button></div>
+                        <div style="display:flex; flex-direction: column; gap:10px; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid #444;">
+                            <div style="display:flex; align-items:center; justify-content: space-between;">
+                                <button id="home-btn" class="setting-action" style="display:flex; align-items:center; gap:8px; padding:8px; flex:1;">🏠 <span>Reset Vista</span></button>
+                                <button id="help-btn-trigger" title="Guida">?</button>
+                            </div>
+                            <button id="theme-btn" class="setting-action" style="display:flex; align-items:center; gap:8px; padding:8px; justify-content:center;">🎨 <span>Cambia Tema</span></button>
+                        </div>
+
+                        <div class="setting-row">
+                            <span>Velocità</span>
+                            <button id="play-pause-btn" class="setting-action" style="flex:none; width:auto; padding:4px 8px; margin:0 5px; font-size:11px;">Pausa ❚❚</button>
+                            <input type="range" id="speed-slider" min="0" max="2" step="0.1" value="0.3" style="width:60px; accent-color:#0f8;">
+                        </div>
                     </div>
                 </div>
                 <h2 id="main-title">Sedenioni</h2>
                 <div class="bar-group">
                     <div id="btn-alg-toggle" class="ui-btn" style="font-family:'Times New Roman'; font-weight:bold; font-size:22px; color:white;">&#x1D54A;</div>
                     <div id="calc-toggle-btn" class="ui-btn" title="Calcolatrice"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M7,2H17A2,2 0 0,1 19,4V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V4A2,2 0 0,1 7,2M7,4V8H17V4H7M7,10V12H9V10H7M11,10V12H13V10H11M15,10V12H17V10H15M7,14V16H9V14H7M11,14V16H13V14H11M15,14V16H17V14H15M7,18V20H9V18H7M11,18V20H13V18H11M15,18V20H17V18H15Z" /></svg></div>
-                    <div id="sidebar-toggle-btn" class="ui-btn" title="Menu Tabelle">▦</div>
+                    <div id="sidebar-toggle-btn" class="ui-btn" title="Menu Tabelle" style="font-size: 32px;">▦</div>
                 </div>
             </div>
         </div>
         <div id="sidebar">
-            <div class="sidebar-tabs">
+            <div id="sidebar-resizer"></div> <div class="sidebar-tabs">
                 <button class="tab-btn active" data-tab="triplets" id="tab-btn-triplets">Cicli (35)</button>
                 <button class="tab-btn" data-tab="zerodiv" id="tab-btn-zerodiv">Divisori dello zero (84)</button>
-                <button class="tab-btn" data-tab="table">Tabella</button>
+                <button class="tab-btn" data-tab="table" id="tab-btn-table">Tabella</button>
                 <button id="close-sidebar-btn" title="Chiudi">&times;</button>
             </div>
             <div id="tab-triplets" class="tab-content active">
@@ -529,7 +651,15 @@
                 <div id="triplets-scroll"><div class="triplets-grid" id="buttons-container"></div></div>
             </div>
             <div id="tab-zerodiv" class="tab-content"><div id="zerodiv-scroll"><div id="zerodiv-grid"></div></div></div>
-            <div id="tab-table" class="tab-content"><div id="table-scroll"><table id="sedenion-table"></table></div><div id="table-hint">Convenzione: Scegliere valore Colonna (Sx) &times; valore Riga (Alto).</div></div>
+            <div id="tab-table" class="tab-content">
+                <div style="padding:10px; border-bottom:1px solid #444; text-align:right;">
+                    <button id="show-all-table-btn" style="background:#008855; border:none; color:white; padding:5px 10px; border-radius:4px; cursor:pointer;">Mostra Tutto</button>
+                </div>
+                <div id="table-scroll"><table id="sedenion-table"></table></div>
+                <div id="table-hint">Convenzione: Scegliere valore Colonna (Sx) &times; valore Riga (Alto).</div>
+                <div id="table-resizer"></div>
+                <div id="formula-container"></div>
+            </div>
         </div>
     </div>
 
@@ -693,6 +823,9 @@
         controls.minDistance = 2; // Evita di entrare nelle sfere
         controls.maxDistance = 150; // Evita di perdere il grafico nel vuoto
 
+	controls.target.set(0, 3, 0); 
+        controls.update();
+
         scene.add(new THREE.AmbientLight(0xffffff, 0.6));
         const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
         dirLight.position.set(10, 20, 10);
@@ -799,7 +932,15 @@
             animatedMaterials.push(material);
             const mesh = new THREE.Mesh(tubeGeom, material);
             scene.add(mesh);
-            tripletVisuals.push({ ids: triplet, mesh: mesh, color: colorHex });
+
+            // HITBOX: Creiamo un tubo invisibile ma molto più largo (0.25 vs 0.035) per il mouse
+            const hitGeom = new THREE.TubeGeometry(curve, 64, 0.25, 8, !isOpenCurve); 
+            // Materiale trasparente (opacity: 0)
+            const hitMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false });
+            const hitMesh = new THREE.Mesh(hitGeom, hitMat);
+            scene.add(hitMesh);
+
+            tripletVisuals.push({ ids: triplet, mesh: mesh, hitMesh: hitMesh, color: colorHex });
         }
         POSITIVE_TRIPLETS.forEach((triplet, idx) => createTripletPath(triplet, palette[idx % palette.length]));
 
@@ -808,6 +949,29 @@
         const tripletButtons = [];
         const btnAlgToggle = document.getElementById('btn-alg-toggle');
         let currentAlgState = 15;
+
+	// --- FORMULA DEMO LOGIC ---
+        window.runFormulaDemo = function(alg, expr, vars) {
+            // 1. Apri e Configura Calcolatrice
+            openCalculator();
+            calcAlgSelect.value = alg;
+            updateGridVisibility();
+            
+            // 2. Genera Variabili Random (solo per quelle richieste)
+            vars.forEach(vName => {
+                switchVar(vName);
+                const v = createZeroVector();
+                // Random tra -10 e 10
+                for(let i=0; i<=alg; i++) v[i] = Math.floor(Math.random() * 21) - 10;
+                setGrid(v); 
+                saveVar(vName);
+            });
+
+            // 3. Imposta l'espressione e calcola
+            const disp = document.getElementById('expression-display');
+            disp.value = expr;
+            calcAction('eval'); // Esegue il calcolo
+        };
 
         function updateAlgebraState(forcedState) {
             if (forcedState) currentAlgState = forcedState;
@@ -830,13 +994,15 @@
             else if(limitIndex===7) titleElem.innerText = "Ottetti";
             else titleElem.innerText = "Sedenioni";
 
-            // --- INIZIO MODIFICA: Aggiorna etichetta Cicli ---
             let tripletCount = 35; // Default Sedenioni
             if (limitIndex === 3) tripletCount = 1;      // Quaternioni
             if (limitIndex === 7) tripletCount = 7;      // Ottetti
             
             document.getElementById('tab-btn-triplets').innerText = `Cicli (${tripletCount})`;
-            // --- FINE MODIFICA ---
+
+	    const size = limitIndex + 1;
+            const tabTable = document.getElementById('tab-btn-table');
+            if(tabTable) tabTable.innerText = `Tabella (${size}×${size})`;
 
             for (let idStr in pointObjects) {
                 const id = parseInt(idStr);
@@ -847,6 +1013,7 @@
             tripletVisuals.forEach((t, i) => {
                 const isVisible = t.ids.every(val => val <= limitIndex);
                 t.mesh.visible = isVisible;
+                if(t.hitMesh) t.hitMesh.visible = isVisible; // Nascondi anche la hitbox
                 if(tripletButtons[i]) tripletButtons[i].style.display = isVisible ? 'block' : 'none';
             });
             tableState.activeRow = null; tableState.activeCol = null;
@@ -858,6 +1025,40 @@
                 if(zdBtn.classList.contains('active')) document.getElementById('tab-btn-triplets').click();
             } else {
                 zdBtn.style.display = 'block';
+            }
+
+            // --- INIEZIONE FORMULE ---
+            const fContainer = document.getElementById('formula-container');
+            fContainer.innerHTML = '';
+            
+            if (limitIndex === 3) { // Quaternioni
+                fContainer.innerHTML = `
+                    <div class="formula-group-title">In generale:</div>
+                    <button class="formula-btn" onclick="runFormulaDemo(3, '[a,b]', ['a','b'])">
+                        [a,b] = a*b - b*a &ne; 0
+                    </button>
+                `;
+            } else if (limitIndex === 7) { // Ottetti
+                fContainer.innerHTML = `
+                    <div class="formula-group-title">In generale:</div>
+                    <button class="formula-btn" onclick="runFormulaDemo(7, '[a,b,c]', ['a','b','c'])">
+                        [a,b,c] = (a*b)*c - a*(b*c) &ne; 0
+                    </button>
+                `;
+            } else if (limitIndex === 15) { // Sedenioni
+                fContainer.innerHTML = `
+                    <div class="formula-group-title">In generale:</div>
+                    <button class="formula-btn" onclick="runFormulaDemo(15, '[a,a,b]', ['a','b'])">
+                        [a,a,b] = (a*a)*b - a*(a*b) &ne; 0
+                    </button>
+                    <button class="formula-btn" onclick="runFormulaDemo(15, '[b,a,a]', ['a','b'])">
+                        [b,a,a] = (b*a)*a - b*(a*a) &ne; 0
+                    </button>
+                    <div class="formula-group-title" style="margin-top:10px;">Ma (Flessibilità):</div>
+                    <button class="formula-btn" onclick="runFormulaDemo(15, '[a,b,a]', ['a','b'])">
+                        [a,b,a] = (a*b)*a - a*(b*a) = 0
+                    </button>
+                `;
             }
         }
 
@@ -893,19 +1094,49 @@
 
         themeBtn.addEventListener('click', () => {
             currentTheme = (currentTheme + 1) % 5;
-            scene.background = null; gridHelper.visible = false; starField.visible = false; container.className = ''; scene.fog = null;
-            if(currentTheme === 0) { scene.background = new THREE.Color(0x1a1a1a); }
-            else if(currentTheme === 1) { container.classList.add('bg-deep-space'); scene.fog = new THREE.FogExp2(0x101020, 0.015); }
-            else if(currentTheme === 2) { container.classList.add('bg-studio'); }
-            else if(currentTheme === 3) { scene.background = new THREE.Color(0x181818); gridHelper.visible = true; }
-            else if(currentTheme === 4) { scene.background = new THREE.Color(0x0a0a14); starField.visible = true; }
+            scene.background = null; gridHelper.visible = false; starField.visible = false; 
+            container.className = ''; scene.fog = null;
+            
+            // Reset stile inline per i gradienti CSS
+            container.style.background = ''; 
+
+            if(currentTheme === 0) { 
+                const col = 0x1a1a1a;
+                scene.background = new THREE.Color(col); 
+                container.style.backgroundColor = '#' + col.toString(16);
+            }
+            else if(currentTheme === 1) { 
+                container.classList.add('bg-deep-space'); 
+                scene.fog = new THREE.FogExp2(0x101020, 0.015); 
+                // Qui non impostiamo backgroundColor perché c'è la classe CSS col gradiente
+            }
+            else if(currentTheme === 2) { 
+                container.classList.add('bg-studio'); 
+            }
+            else if(currentTheme === 3) { 
+                const col = 0x181818;
+                scene.background = new THREE.Color(col); 
+                gridHelper.visible = true; 
+                container.style.backgroundColor = '#' + col.toString(16);
+            }
+            else if(currentTheme === 4) { 
+                const col = 0x0a0a14;
+                scene.background = new THREE.Color(col); 
+                starField.visible = true; 
+                container.style.backgroundColor = '#' + col.toString(16).padStart(6, '0');
+            }
         });
 
         // Sidebar
+        // Sidebar & Resizer
         const sidebar = document.getElementById('sidebar');
         const sidebarToggle = document.getElementById('sidebar-toggle-btn');
         const sidebarClose = document.getElementById('close-sidebar-btn');
+        const resizer = document.getElementById('sidebar-resizer');
+
         function toggleSidebar() {
+            // Reset larghezza manuale per permettere l'animazione CSS standard
+            sidebar.style.width = ''; 
             sidebar.classList.toggle('open');
             sidebarToggle.classList.toggle('active');
             setTimeout(() => {
@@ -913,8 +1144,81 @@
                 camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h); labelRenderer.setSize(w, h);
             }, 350);
         }
+
         sidebarToggle.addEventListener('click', toggleSidebar);
-        sidebarClose.addEventListener('click', () => { sidebar.classList.remove('open'); sidebarToggle.classList.remove('active'); });
+        sidebarClose.addEventListener('click', () => { 
+            sidebar.classList.remove('open'); 
+            sidebarToggle.classList.remove('active'); 
+            sidebar.style.width = ''; // Reset
+
+            // FIX: Forza il ricalcolo delle dimensioni 3D dopo l'animazione di chiusura
+            setTimeout(() => {
+                const w = container.clientWidth; const h = container.clientHeight;
+                camera.aspect = w / h; camera.updateProjectionMatrix(); 
+                renderer.setSize(w, h); labelRenderer.setSize(w, h);
+            }, 350);
+        });
+
+        // Logica Resize (Trascinamento Mouse + Touch)
+        let isResizing = false;
+
+        function startResize(e) {
+            isResizing = true;
+            resizer.classList.add('active');
+            sidebar.style.transition = 'none';
+            document.body.style.cursor = 'ew-resize';
+            if(e.type === 'mousedown') e.preventDefault(); 
+        }
+
+        function doResize(clientX) {
+            if (!isResizing) return;
+            const newWidth = window.innerWidth - clientX;
+            
+            if (newWidth < 50) { // Soglia ridotta per mobile
+                sidebar.style.width = '0px';
+            } else {
+                sidebar.style.width = newWidth + 'px';
+                if(!sidebar.classList.contains('open')) {
+                     sidebar.classList.add('open');
+                     sidebarToggle.classList.add('active');
+                }
+            }
+        }
+
+        function stopResize() {
+            if (!isResizing) return;
+            isResizing = false;
+            resizer.classList.remove('active');
+            sidebar.style.transition = ''; 
+            document.body.style.cursor = 'default';
+
+            if (parseInt(sidebar.style.width) === 0 || (sidebar.offsetWidth < 50)) {
+                sidebar.classList.remove('open');
+                sidebarToggle.classList.remove('active');
+                sidebar.style.width = '';
+            }
+            
+            const w = container.clientWidth; const h = container.clientHeight;
+            camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h); labelRenderer.setSize(w, h);
+        }
+
+        // Mouse Events
+        resizer.addEventListener('mousedown', startResize);
+        document.addEventListener('mousemove', (e) => doResize(e.clientX));
+        document.addEventListener('mouseup', stopResize);
+
+        // Touch Events (Nuovi)
+        resizer.addEventListener('touchstart', (e) => {
+            startResize(e);
+            e.preventDefault(); // Previene lo scroll della pagina mentre afferri
+        }, {passive: false});
+
+        document.addEventListener('touchmove', (e) => {
+            if(isResizing) e.preventDefault(); // Previene scroll pagina
+            doResize(e.touches[0].clientX);
+        }, {passive: false});
+
+        document.addEventListener('touchend', stopResize);
 
         const tabs = document.querySelectorAll('.tab-btn');
         tabs.forEach(tab => {
@@ -931,7 +1235,11 @@
             document.querySelectorAll('.triplet-btn').forEach(b => b.classList.remove('active'));
             if(tripletButtons[idx]) tripletButtons[idx].classList.add('active');
             const triplet = POSITIVE_TRIPLETS[idx];
-            tripletVisuals.forEach((t, i) => t.mesh.visible = (i===idx));
+            tripletVisuals.forEach((t, i) => {
+                const isTarget = (i === idx);
+                t.mesh.visible = isTarget;
+                if(t.hitMesh) t.hitMesh.visible = isTarget;
+            });
             for(let idStr in pointObjects) {
                 const id = parseInt(idStr);
                 const obj = pointObjects[id];
@@ -948,14 +1256,18 @@
             btn.innerText = `{${triplet[0]}, ${triplet[1]}, ${triplet[2]}}`;
             const hex = tripletVisuals[idx].color.toString(16).padStart(6,'0');
             btn.style.borderLeft = `4px solid #${hex}`;
-            btn.addEventListener('click', () => visualizeTripletByIndex(idx));
+            // FIX: Aggiunto l'evento click mancante
+            btn.addEventListener('click', () => visualizeTripletByIndex(idx)); 
             buttonsContainer.appendChild(btn);
             tripletButtons.push(btn);
         });
-        document.getElementById('show-all-btn').addEventListener('click', () => {
+        const resetView = () => {
             document.querySelectorAll('.triplet-btn').forEach(b => b.classList.remove('active'));
             filterSubspace(currentAlgState);
-        });
+        };
+
+        document.getElementById('show-all-btn').addEventListener('click', resetView);
+        document.getElementById('show-all-table-btn').addEventListener('click', resetView);
 
         const zdContainer = document.getElementById('zerodiv-grid');
         ZERO_DIVISORS_RAW.forEach(zd => {
@@ -1020,7 +1332,7 @@
         
         let storedVars = {
             a: new Array(16).fill(0), b: new Array(16).fill(0), c: new Array(16).fill(0),
-            d: new Array(16).fill(0), e: new Array(16).fill(0)
+            d: new Array(16).fill(0)
         };
         let storedAns = []; 
         let currentVar = 'a';
@@ -1061,6 +1373,20 @@
             return vecSub(vecMul(vecMul(a, b), c), vecMul(a, vecMul(b, c)));
         }
 
+        // Funzione per creare base al volo (e_n)
+        function createBaseVec(valVec) {
+            // Il parser passa tutto come vettori. Prendiamo la parte scalare (indice 0)
+            const n = valVec[0]; 
+            const limit = parseInt(document.getElementById('calc-alg-select').value);
+            
+            if(!Number.isInteger(n)) throw "L'indice di base deve essere intero";
+            if(n < 0 || n > limit) throw "Indice e_" + n + " non valido per l'algebra corrente (max " + limit + ")";
+            
+            const res = createZeroVector();
+            res[n] = 1;
+            return res;
+        }
+
         const ops = {
             '+': { prec: 2, assoc: 'L', fn: vecAdd },
             '-': { prec: 2, assoc: 'L', fn: vecSub },
@@ -1071,14 +1397,144 @@
             'norm': { type: 'func', fn: vecNorm },
             'conj': { type: 'func', fn: vecConj },
             'inv': { type: 'func', fn: vecInv },
+            'e_':   { type: 'func', fn: createBaseVec }, // NUOVA FUNZIONE BASE
             'comm': { type: 'func_var', fn: null }, // Placeholder for parsing
             'comm2': { type: 'func', fn: vecComm }, // Real function 2 args
             'comm3': { type: 'func', fn: vecAssoc } // Real function 3 args
         };
 
+function validateAssociativity(exprStr) {
+            // Traduciamo le quadre in sintassi funzionale per il validatore
+            exprStr = exprStr.replace(/\[/g, 'comm(').replace(/\]/g, ')');
+
+            const alg = parseInt(document.getElementById('calc-alg-select').value);
+            if(alg < 7) return; // I Quaternioni (3) sono associativi.
+
+            // Usa lo stesso tokenizer
+            let tokens = exprStr.replace(/\s+/g, '').split(/([+\-*/(),]|norm|conj|inv|comm|e_)/).filter(t => t);
+            
+            // Helper per capire se un token è scalare (numero reale)
+            const isScalar = (token) => {
+                // 1. È un numero puro? (es. "4", "3.14")
+                if(!isNaN(parseFloat(token))) return true;
+                
+                // 2. È una variabile salvata (a, b, c...)? Controlliamo se ha parte immaginaria nulla.
+                if(storedVars[token]) {
+                    // Controlla se tutti gli indici da 1 a 15 sono 0
+                    return storedVars[token].slice(1).every(val => Math.abs(val) < 1e-9);
+                }
+
+                // 3. È un risultato precedente (Ans)?
+                if(token.startsWith('Ans')) {
+                    const idx = parseInt(token.substring(3)) - 1;
+                    const ansVec = storedAns[idx];
+                    if(ansVec) return ansVec.slice(1).every(val => Math.abs(val) < 1e-9);
+                }
+
+                // 4. È la funzione norm()? (Restituisce sempre uno scalare)
+                if(token.startsWith('norm')) return true;
+
+                // 5. Caso base e_n
+                // Nota: e_0 (o 1) è scalare. e_1...e_15 sono vettori.
+                // Questo viene gestito nel loop principale unendo 'e_' + numero, qui assumiamo token 'e_X'
+                if(token.startsWith('e_')) {
+                    const idx = parseInt(token.split('_')[1]);
+                    return idx === 0;
+                }
+
+                // Nel dubbio (es. parentesi complesse non valutate), assumiamo sia un vettore per sicurezza
+                return false; 
+            };
+
+            let level = 0;
+            let nonScalarChainCount = 0; // Conta quanti elementi NON scalari ci sono nella catena
+            
+            for(let i=0; i<tokens.length; i++) {
+                let t = tokens[i];
+
+                // Gestione speciale per e_n (il tokenizer li separa in ['e_', 'n'])
+                if(t === 'e_') {
+                    if(i + 1 < tokens.length) {
+                        t = t + tokens[i+1]; // Diventa "e_1", "e_4", etc.
+                        i++; // Salta il prossimo token perché l'abbiamo unito
+                    }
+                }
+
+                if(t === '(') {
+                    level++;
+                    // Una parentesi aperta inizia un "blocco". 
+                    // Conservativamente, consideriamo un blocco tra parentesi come un "Non Scalare" 
+                    // fino a che non siamo in grado di valutarlo, ma per il conteggio della catena esterna
+                    // lo trattiamo come un singolo operando.
+                }
+                else if(t === ')') {
+                    level--;
+                }
+                else if(level === 0) {
+                    // Siamo al livello base (nessuna parentesi avvolgente)
+                    
+                    if(t === '+' || t === '-') {
+                        // L'addizione spezza la catena di moltiplicazioni.
+                        // "a*b + c*d" -> resetta il contatore a ogni +
+                        nonScalarChainCount = 0;
+                    } 
+                    else if(t === '*' || t === '/') {
+                        // È un operatore, non fa nulla al conteggio, proseguiamo
+                        continue;
+                    }
+                    else if(t === 'comm' || t === 'conj' || t === 'inv' || t === ',') {
+                         // Funzioni o separatori: resettano o vengono ignorati per semplicità
+                         // (Se usi comm[a,b] è una funzione, non una catena moltiplicativa ambigua)
+                         nonScalarChainCount = 0;
+                    }
+                    else {
+                        // È un OPERANDO (Numero, Variabile, e_n, etc.)
+                        if(!isScalar(t)) {
+                            nonScalarChainCount++;
+                        }
+                        
+                        // SE abbiamo 3 o più elementi NON scalari in fila senza parentesi...
+                        // Es: e1 * e2 * e3  (Count = 3) -> Errore
+                        // Es: 4 * e1 * e2   (Scalar, Vector, Vector -> Count = 2) -> OK
+                        if(nonScalarChainCount >= 3) {
+                            throw "Ambiguita': l'algebra selezionata non e' associativa. Usa le parentesi per definire l'ordine (es. (a*b)*c invece di a*b*c).";
+                        }
+                    }
+                }
+            }
+        }
+
         function evaluateExpression(exprStr) {
-            // Tokenizer that includes comma and handles unary minus logic
-            let tokens = exprStr.replace(/\s+/g, '').split(/([+\-*/(),]|norm|conj|inv|comm)/).filter(t => t);
+            // --- 1. SMART COMMA & BRACKET PRE-PROCESSING ---
+            // Gestisce correttamente annidamenti tipo [[a,b],c]
+            let processedStr = "";
+            let bracketDepth = 0;
+
+            for(let i=0; i<exprStr.length; i++) {
+                const char = exprStr[i];
+                if(char === '[') {
+                    bracketDepth++;
+                    processedStr += char;
+                } else if(char === ']') {
+                    if(bracketDepth > 0) bracketDepth--;
+                    processedStr += char;
+                } else if(char === ',') {
+                    // Se siamo dentro parentesi quadre (depth > 0), è un separatore di argomenti.
+                    // Altrimenti (depth 0), è un punto decimale (es. 1,2 -> 1.2).
+                    if(bracketDepth > 0) processedStr += ',';
+                    else processedStr += '.';
+                } else {
+                    processedStr += char;
+                }
+            }
+            
+            // --- 2. TRANSLATE [ ] TO comm( ) ---
+            // Convertiamo la sintassi [a,b] in comm(a,b) per il motore di calcolo esistente.
+            // Il motore gestirà automaticamente la differenza tra comm2 e comm3.
+            exprStr = processedStr.replace(/\[/g, 'comm(').replace(/\]/g, ')');
+
+            // Tokenizer modificato per includere "e_"
+            let tokens = exprStr.replace(/\s+/g, '').split(/([+\-*/(),]|norm|conj|inv|comm|e_)/).filter(t => t);
             
             // Unary Minus Detection: if '-' is at start or follows operator/paren, change to '~'
             for(let i=0; i<tokens.length; i++) {
@@ -1167,13 +1623,24 @@
             let commScopes = []; // { start: index of 'comm', args: 1 }
             
             // Reset tokens for clarity
-            tokens = exprStr.replace(/\s+/g, '').split(/([+\-*/(),]|norm|conj|inv|comm)/).filter(t => t);
-            // Handle Unary Minus again
-            for(let i=0; i<tokens.length; i++) {
-                if(tokens[i] === '-') {
-                    const prev = i > 0 ? tokens[i-1] : null;
+            const rawTokens = exprStr.replace(/\s+/g, '').split(/([+\-*/(),]|norm|conj|inv|comm)/).filter(t => t);
+            tokens = []; // Ricostruiamo l'array pulito
+            
+            // Gestione Unary Plus (+) e Unary Minus (-)
+            for(let i=0; i<rawTokens.length; i++) {
+                const token = rawTokens[i];
+                if(token === '+' || token === '-') {
+                    const prev = i > 0 ? rawTokens[i-1] : null;
                     const isUnary = (i === 0) || (['+','-','*','/','(','comm',','].includes(prev));
-                    if(isUnary) tokens[i] = '~';
+                    
+                    if(isUnary) {
+                        if(token === '-') tokens.push('~'); // Il meno unario diventa tilde
+                        // Il più unario (+) lo ignoriamo (non lo aggiungiamo), perché +3 è uguale a 3
+                    } else {
+                        tokens.push(token); // Operatore binario, lo teniamo
+                    }
+                } else {
+                    tokens.push(token);
                 }
             }
 
@@ -1289,16 +1756,46 @@
             return getV(evalStack[0]);
         }
 
-        function setupGrid() {
+	function setupGrid() {
             inputGrid.innerHTML = '';
             for(let i=0; i<=15; i++) {
                 const l = i===0 ? '1' : 'e'+i;
+                // MODIFICA: Bordo giallo per la parte scalare (indice 0)
+                const customStyle = i === 0 ? 'border-color: #ffcc00;' : '';
+                
                 inputGrid.innerHTML += `
-                    <div class="input-group" id="inp-grp-${i}">
+                    <div class="input-group" id="inp-grp-${i}" style="${customStyle}">
                         <span style="font-size:10px; color:#666; width:25px; text-align:center;">${l}</span>
                         <input class="num-input" data-idx="${i}" value="0">
                     </div>`;
             }
+
+            // Logica Navigazione Frecce
+            const inputs = inputGrid.querySelectorAll('.num-input');
+            inputs.forEach(inp => {
+                inp.addEventListener('keydown', (e) => {
+                    const idx = parseInt(inp.dataset.idx);
+                    let dest = null;
+                    
+                    if(e.key === 'ArrowRight') dest = idx + 1;
+                    else if(e.key === 'ArrowLeft') dest = idx - 1;
+                    else if(e.key === 'ArrowDown') dest = idx + 4; // Salta alla riga sotto (griglia 4 colonne)
+                    else if(e.key === 'ArrowUp') dest = idx - 4;   // Salta alla riga sopra
+                    else return;
+
+                    // Verifica limiti e visibilità
+                    if(dest !== null && dest >= 0 && dest <= 15) {
+                        const targetEl = document.querySelector(`.num-input[data-idx="${dest}"]`);
+                        // Naviga solo se l'input target esiste ed è visibile (non nascosto dal filtro algebra)
+                        if(targetEl && !targetEl.parentElement.classList.contains('hidden')) {
+                            e.preventDefault();
+                            targetEl.focus();
+                            targetEl.select(); // Seleziona il testo per sovrascrittura rapida
+                        }
+                    }
+                });
+            });
+
             updateGridVisibility();
         }
 
@@ -1335,7 +1832,69 @@
         });
         calcAlgSelect.addEventListener('change', updateGridVisibility);
 
-        window.calcInput = function(val) { document.getElementById('expression-display').value += val; };
+window.calcSmartParen = function() {
+            const input = document.getElementById('expression-display');
+            // Mette il focus se non c'è, per garantire che cursor funzioni
+            if (document.activeElement !== input) input.focus();
+
+            const cursor = input.selectionStart;
+            const text = input.value;
+            const left = text.substring(0, cursor);
+            
+            // Conta quante aperte e chiuse ci sono PRIMA del cursore
+            const openCount = (left.match(/\(/g) || []).length;
+            const closeCount = (left.match(/\)/g) || []).length;
+            
+            // Prende l'ultimo carattere non-spazio prima del cursore
+            const lastCharMatch = left.trim().match(/.$/);
+            const lastChar = lastCharMatch ? lastCharMatch[0] : '';
+            
+            // LOGICA: Chiudi SE ci sono parentesi aperte in sospeso E l'ultimo carattere 
+            // è un numero, una lettera, una chiusura o un punto. Altrimenti Apri.
+            const isOperandEnd = /[0-9a-zA-Z_\)\]\.]$/.test(lastChar);
+            
+            if (openCount > closeCount && isOperandEnd) {
+                calcInput(')');
+            } else {
+                calcInput('(');
+            }
+        };
+
+window.calcBracket = function() {
+            const input = document.getElementById('expression-display');
+            if (document.activeElement !== input) input.focus();
+            
+            const cursor = input.selectionStart;
+            const text = input.value;
+            const left = text.substring(0, cursor).trim(); // Ignora spazi finali
+            
+            // Logica: Chiudi se l'ultimo carattere è un valore, una chiusura o un punto.
+            // Altrimenti apri (inizio riga, operatore, virgola, aperta parentesi).
+            const shouldClose = /[0-9a-zA-Z_\)\]\.]$/.test(left);
+            
+            calcInput(shouldClose ? ']' : '[');
+        };
+
+        window.calcInput = function(val) { 
+            const input = document.getElementById('expression-display');
+            
+            // Se l'input non ha il focus, aggiungi alla fine (comportamento fallback)
+            // Ma se l'utente ha cliccato, useremo la posizione del cursore
+            if (document.activeElement !== input) {
+                input.focus();
+            }
+
+            const start = input.selectionStart;
+            const end = input.selectionEnd;
+            const text = input.value;
+
+            // Inserisci il testo nella posizione del cursore o sostituisci la selezione
+            input.value = text.substring(0, start) + val + text.substring(end);
+
+            // Sposta il cursore subito dopo il testo inserito
+            const newPos = start + val.length;
+            input.setSelectionRange(newPos, newPos);
+        };
         const historyOverlay = document.getElementById('history-overlay');
         const toggleHistoryBtn = document.getElementById('toggle-history-btn');
         toggleHistoryBtn.addEventListener('click', () => { historyOverlay.classList.toggle('open'); toggleHistoryBtn.classList.toggle('active'); });
@@ -1343,22 +1902,55 @@
         window.calcAction = function(action) {
             const disp = document.getElementById('expression-display');
             const resDisp = document.getElementById('result-display'); 
-            if(action === 'clear') { disp.value = ''; resDisp.innerText = '0'; }
-            if(action === 'back') disp.value = disp.value.slice(0, -1);
+            
+            // --- AZIONE: CANCELLA TUTTO (AC) ---
+            if(action === 'clear') { 
+                disp.value = ''; 
+                resDisp.innerText = '0'; 
+                disp.focus(); 
+            }
+            
+            // --- AZIONE: BACKSPACE (Intelligente) ---
+            if(action === 'back') {
+                const start = disp.selectionStart;
+                const end = disp.selectionEnd;
+                const text = disp.value;
+
+                if (start !== end) {
+                    // Se c'è del testo selezionato, lo cancella
+                    disp.value = text.substring(0, start) + text.substring(end);
+                    disp.setSelectionRange(start, start);
+                } else if (start > 0) {
+                    // Altrimenti cancella il carattere PRIMA del cursore
+                    disp.value = text.substring(0, start - 1) + text.substring(end);
+                    disp.setSelectionRange(start - 1, start - 1);
+                }
+                disp.focus();
+            }
+
+            // --- AZIONE: CALCOLA (=) ---
             if(action === 'eval') {
                 saveVar(currentVar); 
                 try {
+                    // 1. Controllo Assciatività (Ottetti/Sedenioni)
+                    // Se la funzione esiste (l'abbiamo aggiunta prima), la esegue
+                    if(typeof validateAssociativity === 'function') {
+                        validateAssociativity(disp.value);
+                    }
+
+                    // 2. Valutazione Espressione
                     const res = evaluateExpression(disp.value);
                     const ansId = storedAns.length + 1;
                     storedAns.push(res);
                     
+                    // 3. Formattazione Risultato
                     const formatVec = (v) => {
                         let s = []; let allZero = true;
                         v.forEach((val, i) => {
                             if(Math.abs(val) > 0.001) {
                                 allZero = false;
                                 let term = (val < 0 ? "-" : "+") + Math.abs(parseFloat(val.toFixed(3)));
-                                if(i > 0) term += "e<sub>" + i + "</sub>"; // FIX VISUALIZZAZIONE
+                                if(i > 0) term += "e<sub>" + i + "</sub>"; 
                                 s.push(term);
                             }
                         });
@@ -1369,16 +1961,32 @@
                     };
 
                     const resString = formatVec(res);
-                    resDisp.innerHTML = "= " + resString; // Use innerHTML for subscripts
+                    resDisp.innerHTML = "= " + resString;
 
+                    // 4. Aggiornamento Log/Cronologia
                     const log = document.getElementById('calc-log');
                     if(log.children.length === 1 && log.children[0].innerText.includes('Nessun')) log.innerHTML = '';
                     const entry = document.createElement('div');
                     entry.className = 'log-entry';
                     entry.innerHTML = `<div class="log-expr">Ans${ansId}: ${disp.value}</div><div class="log-res">= ${resString}</div>`;
-                    entry.addEventListener('click', () => { disp.value += `Ans${ansId}`; historyOverlay.classList.remove('open'); toggleHistoryBtn.classList.remove('active'); });
+                    entry.addEventListener('click', () => { 
+                        // Inserisce AnsX dove si trova il cursore
+                        const input = document.getElementById('expression-display');
+                        const val = `Ans${ansId}`;
+                        const start = input.selectionStart;
+                        const end = input.selectionEnd;
+                        input.value = input.value.substring(0, start) + val + input.value.substring(end);
+                        historyOverlay.classList.remove('open'); 
+                        toggleHistoryBtn.classList.remove('active'); 
+                        input.focus();
+                    });
                     log.prepend(entry);
-                } catch(e) { resDisp.innerText = "Err"; console.error(e); alert("Errore: " + e); }
+
+                } catch(e) { 
+                    resDisp.innerText = "Err"; 
+                    console.error(e); 
+                    alert("Errore: " + e); 
+                }
             }
         };
 
@@ -1387,15 +1995,265 @@
             storedAns = [];
         });
 
-        function openCalculator() { calcModal.classList.add('active'); calcAlgSelect.value = currentAlgState; updateGridVisibility(); }
-        calcToggle.addEventListener('click', openCalculator);
-        calcClose.addEventListener('click', () => calcModal.classList.remove('active'));
+        // --- LOGICA APERTURA / CHIUSURA (TOGGLE) ---
+        
+        // Funzione mancante aggiunta per permettere l'interazione con formule e divisori
+        function openCalculator() {
+            const isOpen = calcModal.classList.contains('active');
+            if (!isOpen) {
+                calcModal.classList.add('active');
+                calcToggle.classList.add('active');
+                calcAlgSelect.value = currentAlgState; 
+                updateGridVisibility();
+                
+                // Reset posizione al centro se non è mai stata mossa
+                if (!calcModal.style.left) {
+                    calcModal.style.top = '50%';
+                    calcModal.style.left = '50%';
+                    calcModal.style.transform = 'translate(-50%, -50%)';
+                }
+            }
+        }
+
+        function toggleCalculator() {
+            const isOpen = calcModal.classList.contains('active');
+            if (isOpen) {
+                // Chiudi
+                calcModal.classList.remove('active');
+                calcToggle.classList.remove('active');
+            } else {
+                // Apri
+                calcModal.classList.add('active');
+                calcToggle.classList.add('active'); // Colore blu
+                calcAlgSelect.value = currentAlgState; 
+                updateGridVisibility();
+                
+                // Reset posizione al centro se non è mai stata mossa (opzionale)
+                if (!calcModal.style.left) {
+                    calcModal.style.top = '50%';
+                    calcModal.style.left = '50%';
+                    calcModal.style.transform = 'translate(-50%, -50%)';
+                }
+            }
+        }
+
+        calcToggle.addEventListener('click', toggleCalculator);
+        calcClose.addEventListener('click', () => {
+            calcModal.classList.remove('active');
+            calcToggle.classList.remove('active');
+        });
         setupGrid();
+
+        // --- LOGICA TRASCINAMENTO (DRAG & DROP) ---
+        const calcHeader = document.querySelector('.calc-header');
+        calcHeader.style.cursor = 'move'; // Cambia cursore
+        
+        let isDragging = false;
+        let dragOffsetX = 0;
+        let dragOffsetY = 0;
+
+        calcHeader.addEventListener('mousedown', (e) => {
+            // Impedisce il drag se clicchi sui pulsanti dentro l'header
+            if(e.target.closest('.icon-btn') || e.target.closest('select')) return;
+            
+            e.preventDefault();
+            isDragging = true;
+            
+            // Calcola la posizione attuale per evitare scatti
+            const rect = calcModal.getBoundingClientRect();
+            
+            // Disabilita il centraggio CSS automatico
+            calcModal.style.transform = 'none'; 
+            calcModal.style.margin = '0';
+            calcModal.style.left = rect.left + 'px';
+            calcModal.style.top = rect.top + 'px';
+            
+            // Calcola dove hai cliccato rispetto all'angolo della finestra
+            dragOffsetX = e.clientX - rect.left;
+            dragOffsetY = e.clientY - rect.top;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            // Muovi la finestra
+            calcModal.style.left = (e.clientX - dragOffsetX) + 'px';
+            calcModal.style.top = (e.clientY - dragOffsetY) + 'px';
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
 
         window.addEventListener('resize', () => {
             const w = container.clientWidth; const h = container.clientHeight;
             camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h); labelRenderer.setSize(w, h);
         });
+
+        // --- NUOVO: Logica Click & Hold sulle sfere ---
+        const raycaster = new THREE.Raycaster();
+        const mouseVec = new THREE.Vector2();
+        let isHoldingPoint = false;
+
+        function highlightConnections(pointId) {
+            // 1. Nascondi tutto
+            tripletVisuals.forEach(t => { 
+                t.mesh.visible = false; 
+                if(t.hitMesh) t.hitMesh.visible = false; 
+            });
+            for(let k in pointObjects) {
+                pointObjects[k].mesh.visible = false;
+                pointObjects[k].label.visible = false;
+            }
+
+            // 2. Mostra punto
+            if(pointObjects[pointId]) {
+                pointObjects[pointId].mesh.visible = true;
+                pointObjects[pointId].label.visible = true;
+            }
+
+            // 3. Mostra terne collegate
+            POSITIVE_TRIPLETS.forEach((triplet, idx) => {
+                if(triplet.includes(pointId) && triplet.every(val => val <= currentAlgState)) {
+                    tripletVisuals[idx].mesh.visible = true;
+                    if(tripletVisuals[idx].hitMesh) tripletVisuals[idx].hitMesh.visible = true;
+                    
+                    triplet.forEach(pId => {
+                        pointObjects[pId].mesh.visible = true;
+                        pointObjects[pId].label.visible = true;
+                    });
+                }
+            });
+        }
+
+        function highlightSingleTriplet(tripletIdx) {
+            tripletVisuals.forEach(t => { 
+                t.mesh.visible = false; 
+                if(t.hitMesh) t.hitMesh.visible = false; 
+            });
+            for(let k in pointObjects) {
+                pointObjects[k].mesh.visible = false;
+                pointObjects[k].label.visible = false;
+            }
+
+            const tObj = tripletVisuals[tripletIdx];
+            if(tObj) {
+                tObj.mesh.visible = true;
+                if(tObj.hitMesh) tObj.hitMesh.visible = true;
+                tObj.ids.forEach(pId => {
+                    if(pointObjects[pId]) {
+                        pointObjects[pId].mesh.visible = true;
+                        pointObjects[pId].label.visible = true;
+                    }
+                });
+            }
+        }
+
+        renderer.domElement.addEventListener('pointerdown', (e) => {
+            const rect = renderer.domElement.getBoundingClientRect();
+            mouseVec.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+            mouseVec.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+            raycaster.setFromCamera(mouseVec, camera);
+            
+            const visibleMeshes = [];
+            const meshData = new Map(); 
+
+            // Punti
+            for(let idStr in pointObjects) {
+                const id = parseInt(idStr);
+                if(pointObjects[id].mesh.visible) {
+                    visibleMeshes.push(pointObjects[id].mesh);
+                    meshData.set(pointObjects[id].mesh, { type: 'point', id: id });
+                }
+            }
+
+            // Cicli (Usa HITMESH per il rilevamento)
+            tripletVisuals.forEach((tVal, idx) => {
+                // Se la hitbox esiste ed è visibile, la usiamo per il click
+                const target = (tVal.hitMesh && tVal.hitMesh.visible) ? tVal.hitMesh : (tVal.mesh.visible ? tVal.mesh : null);
+                if(target) {
+                    visibleMeshes.push(target);
+                    meshData.set(target, { type: 'triplet', id: idx });
+                }
+            });
+
+            const intersects = raycaster.intersectObjects(visibleMeshes);
+            if(intersects.length > 0) {
+                const data = meshData.get(intersects[0].object);
+                if(data.type === 'point') highlightConnections(data.id);
+                else if (data.type === 'triplet') highlightSingleTriplet(data.id);
+                isHoldingPoint = true;
+            }
+        });
+
+
+
+        // Evento: Rilascio
+        window.addEventListener('pointerup', () => {
+            if(isHoldingPoint) {
+                isHoldingPoint = false;
+                // Non serve riabilitare i controlli perché non li abbiamo disabilitati
+                filterSubspace(currentAlgState); // Ripristina la vista normale
+            }
+        });
+        // ----------------------------------------------
+
+	// --- LOGICA RESIZER ORIZZONTALE PERFETTA ---
+        const tableResizer = document.getElementById('table-resizer');
+        const tableScroll = document.getElementById('table-scroll');
+        const sidebarContent = document.getElementById('sidebar');
+        let isResizingTable = false;
+        let startY = 0;
+        let startHeight = 0;
+        let animationFrameId = null;
+
+        tableResizer.addEventListener('pointerdown', (e) => {
+            isResizingTable = true;
+            // Salviamo la posizione iniziale del tocco e l'altezza attuale
+            startY = e.clientY;
+            startHeight = tableScroll.offsetHeight;
+            
+            tableResizer.classList.add('active');
+            document.body.style.cursor = 'ns-resize';
+            tableResizer.setPointerCapture(e.pointerId);
+            e.preventDefault();
+        });
+
+        window.addEventListener('pointermove', (e) => {
+            if (!isResizingTable) return;
+
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+
+            animationFrameId = requestAnimationFrame(() => {
+                // Calcoliamo la differenza di movimento (delta)
+                const deltaY = e.clientY - startY;
+                let newHeight = startHeight + deltaY;
+                
+                // Limiti: min 80px, max altezza sidebar meno spazio per formule
+                const sidebarHeight = sidebarContent.offsetHeight;
+                newHeight = Math.max(80, Math.min(sidebarHeight - 150, newHeight));
+                
+                tableScroll.style.height = newHeight + 'px';
+                // Rimuoviamo il flex per dare priorità all'altezza fissa in pixel
+                tableScroll.style.flex = "none"; 
+            });
+        });
+
+        window.addEventListener('pointerup', (e) => {
+            if (!isResizingTable) return;
+            isResizingTable = false;
+            document.body.style.cursor = 'default';
+            tableResizer.releasePointerCapture(e.pointerId);
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        });
+
+        window.addEventListener('pointerup', () => {
+            if (!isResizingTable) return;
+            isResizingTable = false;
+            document.body.style.cursor = 'default';
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        });
+
         const clock = new THREE.Clock();
         function animate() {
             requestAnimationFrame(animate);
