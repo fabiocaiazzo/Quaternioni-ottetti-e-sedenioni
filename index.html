@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sedenioni v9.2</title>
+    <title>Sedenioni v9.4</title>
     <style>
         body { margin: 0; overflow: hidden; background-color: #1a1a1a; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
@@ -344,9 +344,16 @@
             border-radius: 4px; font-weight: bold; cursor: pointer; user-select: none;
             font-family: monospace; font-size: 13px; text-align: center; transition: background 0.1s;
         }
+        .calc-action-btn {
+            background: #2a2a30; border: 1px solid #444; color: #ccc;
+            padding: 8px 0; border-radius: 4px; cursor: pointer; flex: 1;
+            font-size: 11px; font-weight: bold; transition: all 0.2s;
+            text-align: center; /* Maiuscolo rimosso */
+        }
+        .calc-action-btn:hover { background: #3a3a40; color: white; border-color: #0088ff; }
+        .calc-action-btn:active { transform: scale(0.96); }
+
         .key-btn:hover { background: #3a3a3a; }
-        .key-btn:active { transform: scale(0.95); background: #555; }
-        .key-var { background: #003366; border-color: #004488; }
         .key-num { background: #1a1a1a; border-color: #333; color: #eee; }
         .key-op { background: #2a2a2a; }
         .key-eval { background: #008855; border-color: #00aa66; }
@@ -492,52 +499,74 @@
             <div class="help-content">
                 
                 <div class="help-page active" data-page="0">
-                    <h3 style="color:#00aaff; margin-top:0;">1. Navigazione 3D</h3>
-                    <p>Benvenuto nel visualizzatore algebrico interattivo.</p>
+                    <h3 style="color:#00aaff; margin-top:0;">1. Panoramica e Visualizzazione 3D</h3>
+                    <p>Progetto ideato da <strong>Fabio Caiazzo</strong> ed è stato realizzato con il supporto di strumenti di intelligenza artificiale, che hanno assistito nella scrittura del codice sulla base delle specifiche fornite dall'autore. Strumento per la visualizzazione di quaternioni, ottetti e sedenioni.</p>
                     <ul style="padding-left:20px;">
-                        <li><strong>Ruota:</strong> Tieni premuto il <em>Tasto Sinistro</em> del mouse e muovi.</li>
-                        <li><strong>Zoom:</strong> Usa la rotellina del mouse.</li>
-                        <li><strong>Sposta:</strong> Tieni premuto il <em>Tasto Destro</em> per traslare la vista.</li>
+                        <li><strong>Grafico 3D:</strong> Mostra la struttura moltiplicativa. La disposizione degli elementi indica il prodotto.</li>
+                        <li><strong>Verso Positivo:</strong> Il senso di percorrenza delle punte bianche sulle linee indica il verso positivo della moltiplicazione (es: se e_1*e_2=e_3, il punto segue 1-2-3).</li>
+                        <li><strong>Interazione:</strong> Cliccando sulle singole basi è possibile isolare i cicli ad essi associati.</li>
                     </ul>
-                    <p>Se ti perdi, apri le impostazioni <span class="help-icon-inline">⚙️</span> e premi <strong>Reset 🏠</strong> per tornare alla visuale iniziale.</p>
                 </div>
 
                 <div class="help-page" data-page="1">
-                    <h3 style="color:#00aaff; margin-top:0;">2. Impostazioni & Algebre</h3>
-                    <p>Usa il menu <span class="help-icon-inline">⚙️</span> per:</p>
-                    <ul style="padding-left:20px;">
-                        <li>Cambiare <strong>Tema</strong> (Spazio, Studio, Nero).</li>
-                        <li>Regolare la <strong>Velocità</strong> delle animazioni.</li>
-                        <li>Mettere in <strong>Pausa</strong> il flusso.</li>
+                    <h3 style="color:#00aaff; margin-top:0;">2. Impostazioni e Selezione Algebra</h3>
+                    <p><strong>Barra Impostazioni</strong> (<span class="help-icon-inline">⚙️</span>): Gestione ambiente.</p>
+                    <ul style="padding-left:20px; margin-bottom:10px;">
+                        <li><strong>Reset Vista:</strong> Riporta la visuale alla posizione originale.</li>
+                        <li><strong>Sfondo:</strong> Cambia tra 5 varianti diverse.</li>
+                        <li><strong>Animazione:</strong> Pausa/Riavvio e Slider velocità.</li>
                     </ul>
-                    <hr style="border-color:#444;">
-                    <p><strong>Filtro Dimensionale:</strong></p>
-                    <p>Clicca sul tasto con la lettera gotica in alto a destra (<span class="help-icon-inline">&#x1D54A;</span>) per ciclare tra:</p>
-                    <div style="display:flex; gap:10px; margin-top:5px;">
-                        <span style="background:#222; padding:2px 6px; border-radius:4px; font-size:12px; border:1px solid #444;">H: Quaternioni (4D)</span>
-                        <span style="background:#222; padding:2px 6px; border-radius:4px; font-size:12px; border:1px solid #444;">O: Ottetti (8D)</span>
-                        <span style="background:#222; padding:2px 6px; border-radius:4px; font-size:12px; border:1px solid #444;">S: Sedenioni (16D)</span>
-                    </div>
+                    <p><strong>Selezione Algebra</strong> (Tasto <span class="help-icon-inline">&#x1D54A;</span>): Passa tra H, O, S.</p>
+                    <ul style="padding-left:20px;">
+                        <li><strong>Modifica Grafico:</strong> Circonferenza (H), Piano di Fano (O), PG(3,2) (S).</li>
+                        <li><strong>Aggiorna:</strong> Cicli, Divisori Zero (solo S) e Tabella.</li>
+                    </ul>
                 </div>
 
                 <div class="help-page" data-page="2">
-                    <h3 style="color:#00aaff; margin-top:0;">3. Calcolatrice Vettoriale</h3>
-                    <p>Accedi col tasto <span class="help-icon-inline"><svg style="width:12px;height:12px;fill:white;vertical-align:middle" viewBox="0 0 24 24"><path d="M7,2H17A2,2 0 0,1 19,4V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V4A2,2 0 0,1 7,2M7,4V8H17V4H7M7,10V12H9V10H7M11,10V12H13V10H11M15,10V12H17V10H15M7,14V16H9V14H7M11,14V16H13V14H11M15,14V16H17V14H15M7,18V20H9V18H7M11,18V20H13V18H11M15,18V20H17V18H15Z"/></svg></span>. Esegui operazioni complesse sui 16 elementi.</p>
+                    <h3 style="color:#00aaff; margin-top:0;">3. Calcolatrice: Gestione Variabili</h3>
+                    <p>Accessibile dal tasto <span class="help-icon-inline">🖩</span>. Permette calcoli sulle tre algebre.</p>
                     <ul style="padding-left:20px;">
-                        <li><strong>Variabili (A-E):</strong> Seleziona una tab (es. "Var A"), inserisci i valori nel vettore e usa <code>a</code> nelle formule.</li>
-                        <li><strong>Operazioni:</strong> Somma (+), Prodotto (*), Inverso (/), Coniugato (cnj), Norma (norm).</li>
-                        <li><strong>Commutatore:</strong> Usa <code>[x,y]</code> per calcolare il commutatore o <code>[x,y,z]</code> per l'associatore.</li>
-                        <li><strong>Cronologia:</strong> Clicca sull'orologio 🕒 per vedere i calcoli passati e riutilizzare i risultati (Ans).</li>
+                        <li><strong>Variabili (a, b, c, d):</strong> Si possono salvare fino a 4 variabili. La dimensione si adatta all'algebra (4, 8 o 16 valori).</li>
+                        <li><strong>Tasti Rapidi:</strong>
+                            <ul>
+                                <li><em>"Azz Var"</em>: Pone la variabile a 0.</li>
+                                <li><em>"Random Var"</em>: Genera coefficienti interi casuali tra -10 e 10.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Scalari:</strong> Numeri 0-9 per moltiplicazioni dirette.</li>
                     </ul>
                 </div>
 
                 <div class="help-page" data-page="3">
-                    <h3 style="color:#00aaff; margin-top:0;">4. Tabelle & Divisori</h3>
-                    <p>Apri la barra laterale col tasto <span class="help-icon-inline">▦</span>.</p>
+                    <h3 style="color:#00aaff; margin-top:0;">4. Calcolatrice: Operazioni</h3>
                     <ul style="padding-left:20px;">
-                        <li><strong>Cicli (Triplets):</strong> Elenco delle terne che si comportano come quaternioni (i*j=k). Clicca per illuminarle nel grafico 3D.</li>
-                        <li><strong>Divisori Zero:</strong> Coppie di numeri non nulli il cui prodotto è zero (esclusivo dei Sedenioni). Cliccandoli li carica nella calcolatrice per verificarlo.</li>
-                        <li><strong>Tabella:</strong> La tavola di moltiplicazione completa. Clicca su righe/colonne per evidenziare le relazioni.</li>
+                        <li><strong>Sintassi e Operazioni:</strong> Modulo (<code>|v|</code>), Inverso (<code>inv</code>), Coniugato (<code>cnj</code>), Commutatore/Associatore (<code>[x,y]</code>).</li>
+                        <li><strong>Input Basi:</strong> Tasto <code>e_(n)</code> per inserire le unità immaginarie.</li>
+                        <li><strong>Punteggiatura:</strong> Tasto "." (punto decimale), Tasto "," (separatore argomenti).</li>
+                        <li><strong>Cronologia</strong> (Tasto 🕒):
+                            <ul>
+                                <li>Mostra/Nasconde risultati passati.</li>
+                                <li>"Pulisci" per cancellare. Clicca "AnsX" per riutilizzare.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="help-page" data-page="4">
+                    <h3 style="color:#00aaff; margin-top:0;">5. Pannello Laterale (Tabelle)</h3>
+                    <p>Apri con <span class="help-icon-inline">▦</span>. Tre sezioni:</p>
+                    <ul style="padding-left:20px;">
+                        <li><strong>A. Cicli:</strong> Elenco cicli (1, 7 o 35). Clicca per isolare nel grafico. "Mostra tutto" per resettare.</li>
+                        <li><strong>B. Divisori Zero:</strong> (Solo S) Clicca una coppia per caricarla in calcolatrice e verificare il prodotto nullo.</li>
+                        <li><strong>C. Tabella:</strong> (Colonna Sx * Riga Alto).
+                            <ul>
+                                <li>Clic intestazione: Evidenzia riga/colonna.</li>
+                                <li>Clic incrocio: Evidenzia risultato.</li>
+                                <li>Clic cella interna: Evidenzia terna 3D corrispondente.</li>
+                                <li>Proprietà in basso: Clicca per esempio random.</li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
 
@@ -546,6 +575,7 @@
                 <button id="help-prev-btn" class="help-nav-btn" disabled>&lt; Indietro</button>
                 <div class="help-indicators">
                     <div class="help-dot active"></div>
+                    <div class="help-dot"></div>
                     <div class="help-dot"></div>
                     <div class="help-dot"></div>
                     <div class="help-dot"></div>
@@ -599,8 +629,8 @@
             </div>
             
             <div style="display:flex; justify-content:space-between; gap:5px; margin-bottom:8px; flex-shrink:0;">
-                 <button class="setting-action" id="btn-grid-clear" style="padding:4px;">Azzera Var</button>
-                 <button class="setting-action" id="btn-grid-rand" style="padding:4px;">Random Var</button>
+                 <button class="calc-action-btn" id="btn-grid-clear">Azzera Var</button>
+                 <button class="calc-action-btn" id="btn-grid-rand">Random Var</button>
             </div>
     
             <div class="keypad">
@@ -662,9 +692,9 @@
                                 <span>Guida</span>
                             </button>
                             
-                            <button id="theme-btn" class="menu-btn full-width" title="Cambia stile grafico">
+                            <button id="theme-btn" class="menu-btn full-width" title="Cambia Sfondo">
                                 <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0 0 18c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
-                                <span id="theme-label">Tema: Default</span>
+                                <span id="theme-label">Sfondo</span>
                             </button>
                         </div>
 
@@ -699,18 +729,22 @@
             </div>
             <div id="tab-triplets" class="tab-content active">
                 <div style="padding:10px; border-bottom:1px solid #444; display:grid; grid-template-columns: 1fr auto 1fr; align-items:center;">
-                    <div></div> <button id="sidebar-alg-toggle" style="background:transparent; border:1px solid #555; color:#eee; width:32px; height:32px; border-radius:6px; font-family:'Times New Roman'; font-weight:bold; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s;" title="Cambia Dimensione">
+                    <div></div> 
+                    <button id="sidebar-alg-toggle" style="background:transparent; border:1px solid #555; color:#eee; width:32px; height:32px; border-radius:6px; font-family:'Times New Roman'; font-weight:bold; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s;" title="Cambia Dimensione">
                         &#x1D54A;
                     </button>
-
-                    <button id="show-all-btn" style="background:#008855; border:none; color:white; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:11px; justify-self: end; font-weight:600;">Mostra Tutto</button>
+                    <button id="show-all-btn" style="background:#008855; border:none; color:white; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:11px; justify-self: end;">Mostra Tutto</button>
                 </div>
                 <div id="triplets-scroll"><div class="triplets-grid" id="buttons-container"></div></div>
             </div>
             <div id="tab-zerodiv" class="tab-content"><div id="zerodiv-scroll"><div id="zerodiv-grid"></div></div></div>
             <div id="tab-table" class="tab-content">
-                <div style="padding:10px; border-bottom:1px solid #444; text-align:right;">
-                    <button id="show-all-table-btn" style="background:#008855; border:none; color:white; padding:5px 10px; border-radius:4px; cursor:pointer;">Mostra Tutto</button>
+                <div style="padding:10px; border-bottom:1px solid #444; display:grid; grid-template-columns: 1fr auto 1fr; align-items:center;">
+                     <div></div> 
+                     <button id="sidebar-alg-toggle-table" style="background:transparent; border:1px solid #555; color:#eee; width:32px; height:32px; border-radius:6px; font-family:'Times New Roman'; font-weight:bold; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s;" title="Cambia Dimensione">
+                        &#x1D54A;
+                    </button>
+                    <button id="show-all-table-btn" style="background:#008855; border:none; color:white; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:11px; justify-self: end;">Mostra Tutto</button>
                 </div>
                 <div id="table-scroll"><table id="sedenion-table"></table></div>
                 <div id="table-hint">Convenzione: Scegliere valore Colonna (Sx) &times; valore Riga (Alto).</div>
@@ -1096,7 +1130,7 @@
             const hitMesh = new THREE.Mesh(hitGeom, hitMat);
             scene.add(hitMesh);
 
-            tripletVisuals.push({ ids: triplet, mesh: mesh, hitMesh: hitMesh, color: colorHex });
+            tripletVisuals.push({ ids: triplet, mesh: mesh, hitMesh: hitMesh, color: colorHex, isCollinear: isCollinear });
         }
         POSITIVE_TRIPLETS.forEach((triplet, idx) => createTripletPath(triplet, palette[idx % palette.length]));
 
@@ -1104,7 +1138,8 @@
         const titleElem = document.getElementById('main-title');
         const tripletButtons = [];
         const btnAlgToggle = document.getElementById('btn-alg-toggle');
-        const sidebarAlgToggle = document.getElementById('sidebar-alg-toggle'); // Nuovo bottone
+        const sidebarAlgToggle = document.getElementById('sidebar-alg-toggle');
+        const sidebarAlgToggleTable = document.getElementById('sidebar-alg-toggle-table'); // Nuovo bottone tabella
         let currentAlgState = 15;
 
 	// --- FORMULA DEMO LOGIC ---
@@ -1144,9 +1179,10 @@
             else if (currentAlgState === 7) symbol = "&#x1D546;"; // O
             else symbol = "&#x1D54A;";                            // S
 
-            // Aggiorna entrambi i pulsanti (Top Bar e Sidebar)
+            // Aggiorna tutti i pulsanti (Top Bar e Sidebar)
             btnAlgToggle.innerHTML = symbol;
             if(sidebarAlgToggle) sidebarAlgToggle.innerHTML = symbol;
+            if(sidebarAlgToggleTable) sidebarAlgToggleTable.innerHTML = symbol;
 
             filterSubspace(currentAlgState);
             
@@ -1157,6 +1193,55 @@
         filterSubspace(15);
         btnAlgToggle.addEventListener('click', () => updateAlgebraState(null));
         if(sidebarAlgToggle) sidebarAlgToggle.addEventListener('click', () => updateAlgebraState(null));
+        if(sidebarAlgToggleTable) sidebarAlgToggleTable.addEventListener('click', () => updateAlgebraState(null));
+
+        // --- GESTIONE COLORI CICLI (Tema Geometrico Fisso) ---
+        const TETRA_VERTICES = [5, 6, 7, 12];
+        const MIDPOINTS = [1, 2, 3, 9, 10, 11];
+
+        function updateCycleColors() {
+            tripletVisuals.forEach((t, i) => {
+                let newColorHex;
+                
+                const hasCenter = t.ids.includes(8);
+                
+                if (hasCenter) {
+                    // 4. Segmenti passanti per e8 (centro) -> Azzurri (Cyan)
+                    newColorHex = 0x00ffff;
+                } else if (!t.isCollinear) {
+                    // Logica CERCHI (Curve):
+                    // Solo i 4 cerchi sulle facce (composti esclusivamente da punti medi) sono ROSA
+                    const isFaceCircle = t.ids.every(id => MIDPOINTS.includes(id));
+                    
+                    if (isFaceCircle) {
+                        newColorHex = 0xff00ff; // Rosa
+                    } else {
+                        newColorHex = 0x00ff00; // Gli altri cerchi -> Verdi
+                    }
+                } else {
+                    // Logica SEGMENTI (Linee):
+                    const verticesCount = t.ids.filter(id => TETRA_VERTICES.includes(id)).length;
+                    
+                    if (verticesCount >= 2) {
+                        // 1. Spigoli del tetraedro -> Rossi (Modificato da Arancione)
+                        newColorHex = 0xff0000;
+                    } else if (verticesCount === 1) {
+                        // 2. Segmenti sulle facce -> Gialli
+                        newColorHex = 0xffff00;
+                    } else {
+                        // 5. Restanti segmenti -> Verdi
+                        newColorHex = 0x00ff00;
+                    }
+                }
+                
+                // Applica il colore
+                t.mesh.material.uniforms.color.value.setHex(newColorHex);
+                // Aggiorna anche il bordo del bottone nella sidebar
+                if(tripletButtons[i]) tripletButtons[i].style.borderLeftColor = '#' + newColorHex.toString(16).padStart(6,'0');
+            });
+            if(typeof forceUpdate === 'function') forceUpdate();
+        }
+        
 
         function filterSubspace(limitIndex) {
             if(limitIndex===3) titleElem.innerText = "Quaternioni";
@@ -1285,7 +1370,7 @@
             currentTheme = (currentTheme + 1) % 5;
             
             // Aggiorna l'etichetta del pulsante
-            themeLabel.innerText = "Tema: " + themeNames[currentTheme];
+            themeLabel.innerText = "Sfondo: " + themeNames[currentTheme];
 
             scene.background = null; gridHelper.visible = false; starField.visible = false; 
             container.className = ''; scene.fog = null;
@@ -2514,6 +2599,77 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
         animate();
         // Forza un render iniziale
         renderRequested = true;
+        
+        // Applica i colori corretti all'avvio (Ora è sicuro chiamarlo qui)
+        updateCycleColors();
+
+// =============================================================
+        // =================== SCORCIATOIE TASTIERA ====================
+        // =============================================================
+
+        window.addEventListener('keydown', (e) => {
+            // Controlla se l'utente sta già scrivendo in un campo di input (es. dentro la calcolatrice)
+            const activeTag = document.activeElement.tagName.toLowerCase();
+            const isInputActive = (activeTag === 'input' || activeTag === 'textarea');
+
+            // --- AZIONI GLOBALI (Solo se NON si sta già scrivendo) ---
+            if (!isInputActive) {
+
+                // 1. SPAZIO: Play/Pausa
+                if (e.code === 'Space') {
+                    e.preventDefault(); // Evita lo scroll della pagina
+                    document.getElementById('play-pause-btn').click();
+                    return;
+                }
+
+                // 2. INVIO: Reset Vista Camera
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    document.getElementById('home-btn').click();
+                    return;
+                }
+
+                // 3. FRECCE SU/GIU: Controllo Velocità
+                if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                    e.preventDefault(); // Evita scroll
+                    const slider = document.getElementById('speed-slider');
+                    let val = parseFloat(slider.value);
+                    const step = 0.1;
+
+                    if (e.key === 'ArrowUp') {
+                        val = Math.min(val + step, parseFloat(slider.max));
+                    } else {
+                        val = Math.max(val - step, parseFloat(slider.min));
+                    }
+
+                    slider.value = val.toFixed(1);
+                    // Scatena l'evento 'input' per aggiornare la variabile animParams e la label UI
+                    slider.dispatchEvent(new Event('input'));
+                    return;
+                }
+
+                // 4. DIGITAZIONE RAPIDA CALCOLATRICE
+                // Accetta: Lettere (a-z), Numeri (0-9), Parentesi () [], Operatori + -, Punto .
+                const allowedKeys = /^[a-zA-Z0-9\(\)\[\]\+\-\.]$/;
+
+                // Controlliamo che sia un tasto singolo (evita F1, Tab, ecc) e che sia nella lista
+                if (e.key.length === 1 && allowedKeys.test(e.key)) {
+                    e.preventDefault();
+                    
+                    // Apre la calcolatrice (funzione esistente nel tuo script)
+                    openCalculator();
+
+                    const display = document.getElementById('expression-display');
+                    
+                    // Aggiunge il carattere digitato al valore attuale
+                    display.value += e.key;
+                    
+                    // Mette il focus sulla casella e sposta il cursore alla fine
+                    display.focus();
+                    display.setSelectionRange(display.value.length, display.value.length);
+                }
+            }
+        });
     </script>
 </body>
 </html>
