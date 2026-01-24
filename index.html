@@ -369,6 +369,7 @@
         .history-header {
             padding: 10px; border-bottom: 1px solid #444; background: #25252a;
             display: flex; justify-content: space-between; align-items: center; font-size: 13px;
+            color: white;
         }
         #calc-log { flex: 1; overflow-y: auto; padding: 10px; }
         .log-entry { 
@@ -504,7 +505,7 @@
                     <ul style="padding-left:20px;">
                         <li><strong>Grafico 3D:</strong> Mostra la struttura moltiplicativa. La disposizione degli elementi indica il prodotto.</li>
                         <li><strong>Verso Positivo:</strong> Il senso di percorrenza delle punte bianche sulle linee indica il verso positivo della moltiplicazione (es: se e_1*e_2=e_3, il punto segue 1-2-3).</li>
-                        <li><strong>Interazione:</strong> Cliccando sulle singole basi è possibile isolare i cicli ad essi associati.</li>
+                        <li><strong>Interazione:</strong> Cliccando sulle singole unità immaginarie è possibile isolare i cicli ad essi associati.</li>
                     </ul>
                 </div>
 
@@ -512,9 +513,9 @@
                     <h3 style="color:#00aaff; margin-top:0;">2. Impostazioni e Selezione Algebra</h3>
                     <p><strong>Barra Impostazioni</strong> (<span class="help-icon-inline">⚙️</span>): Gestione ambiente.</p>
                     <ul style="padding-left:20px; margin-bottom:10px;">
-                        <li><strong>Reset Vista:</strong> Riporta la visuale alla posizione originale.</li>
+                        <li><strong>Reset Vista:</strong> Riporta la visuale alla posizione originale (o premendo Invio).</li>
                         <li><strong>Sfondo:</strong> Cambia tra 5 varianti diverse.</li>
-                        <li><strong>Animazione:</strong> Pausa/Riavvio e Slider velocità.</li>
+                        <li><strong>Animazione:</strong> Pausa/Riavvio (o premendo Space) e Slider velocità (o premendo le frecce < e >).</li>
                     </ul>
                     <p><strong>Selezione Algebra</strong> (Tasto <span class="help-icon-inline">&#x1D54A;</span>): Passa tra H, O, S.</p>
                     <ul style="padding-left:20px;">
@@ -525,7 +526,7 @@
 
                 <div class="help-page" data-page="2">
                     <h3 style="color:#00aaff; margin-top:0;">3. Calcolatrice: Gestione Variabili</h3>
-                    <p>Accessibile dal tasto <span class="help-icon-inline">🖩</span>. Permette calcoli sulle tre algebre.</p>
+                    <p>Accessibile dal tasto <span class="help-icon-inline">🖩</span> o da tastiera digitando caratteri. Permette calcoli sulle tre algebre.</p>
                     <ul style="padding-left:20px;">
                         <li><strong>Variabili (a, b, c, d):</strong> Si possono salvare fino a 4 variabili. La dimensione si adatta all'algebra (4, 8 o 16 valori).</li>
                         <li><strong>Tasti Rapidi:</strong>
@@ -542,7 +543,7 @@
                     <h3 style="color:#00aaff; margin-top:0;">4. Calcolatrice: Operazioni</h3>
                     <ul style="padding-left:20px;">
                         <li><strong>Sintassi e Operazioni:</strong> Modulo (<code>|v|</code>), Inverso (<code>inv</code>), Coniugato (<code>cnj</code>), Commutatore/Associatore (<code>[x,y]</code>).</li>
-                        <li><strong>Input Basi:</strong> Tasto <code>e_(n)</code> per inserire le unità immaginarie.</li>
+                        <li><strong>Unità immaginarie:</strong> Tasto <code>e_(n)</code> per inserire le unità immaginarie.</li>
                         <li><strong>Punteggiatura:</strong> Tasto "." (punto decimale), Tasto "," (separatore argomenti).</li>
                         <li><strong>Cronologia</strong> (Tasto 🕒):
                             <ul>
