@@ -1002,6 +1002,7 @@
         // --- FIX ZOOM LIMITS ---
         const controls = new OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true; controls.dampingFactor = 0.05;
+	controls.zoomSpeed = 15;
         controls.minDistance = 2; // Evita di entrare nelle sfere
         controls.maxDistance = 150; // Evita di perdere il grafico nel vuoto
 
@@ -1036,7 +1037,7 @@
 
         const pointObjects = {}; 
         // OTTIMIZZAZIONE: Ridotti segmenti da 16 a 10/8 (molto più leggero per 16 sfere)
-        const sphereGeom = new THREE.SphereGeometry(0.22, 10, 8); 
+        const sphereGeom = new THREE.SphereGeometry(0.22, 32, 32); 
         const sphereMat = new THREE.MeshPhysicalMaterial({ color: 0xaaaaaa, metalness: 0.2, roughness: 0.4 });
         const sphereMatCenter = new THREE.MeshPhysicalMaterial({ color: 0xffdd00, metalness: 0.2, roughness: 0.4 });
 
@@ -1114,7 +1115,7 @@
                 curve = new THREE.CatmullRomCurve3(points, true, 'catmullrom', 0.5);
             }
             // OTTIMIZZAZIONE: Segmenti ridotti da 256->64 e raggio da 8->4. Risparmio memoria GPU enorme.
-            const tubeGeom = new THREE.TubeGeometry(curve, 64, 0.035, 4, !isOpenCurve);
+            const tubeGeom = new THREE.TubeGeometry(curve, 64, 0.035, 32, !isOpenCurve);
             const material = new THREE.ShaderMaterial({
                 uniforms: { customTime: { value: 0 }, color: { value: new THREE.Color(colorHex) }, flowDir: { value: isCollinear ? -1.0 : 1.0 } },
                 vertexShader: flowVertexShader, fragmentShader: flowFragmentShader,
