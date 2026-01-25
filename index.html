@@ -1000,11 +1000,17 @@
         container.appendChild(labelRenderer.domElement);
         
         // --- FIX ZOOM LIMITS ---
-        const controls = new OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true; controls.dampingFactor = 0.05;
-	controls.zoomSpeed = 15;
-        controls.minDistance = 2; // Evita di entrare nelle sfere
-        controls.maxDistance = 150; // Evita di perdere il grafico nel vuoto
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; 
+controls.dampingFactor = 0.05;
+
+// Rileva se il dispositivo è touch
+const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+// 15 per PC (Touchpad), ~1.5 per Telefono
+controls.zoomSpeed = isTouchDevice ? 1.5 : 15; 
+
+controls.minDistance = 2; 
+controls.maxDistance = 150;
 
 	controls.target.set(0, 3, 0); 
         controls.update();
