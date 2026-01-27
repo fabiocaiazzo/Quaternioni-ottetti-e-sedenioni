@@ -52,16 +52,18 @@
             backdrop-filter: blur(4px); transition: 0.2s;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
-        .ui-btn:active { transform: scale(0.95); }
+        .ui-btn:active { transform: scale(0.95); outline: none; }
         .ui-btn.active { background: rgba(0, 136, 255, 0.8); border-color: #00aaff; color: white; }
         .icon-svg { width: 24px; height: 24px; fill: currentColor; }
 
         /* FIX UX: Impedisce la selezione del testo (effetto blu) su pulsanti e titoli */
-        .ui-btn, #main-title, .tab-btn, .triplet-btn, .zerodiv-btn, .setting-action, .menu-btn, #sidebar-resizer {
+        .ui-btn, #main-title, .tab-btn, .triplet-btn, .zerodiv-btn, .setting-action, .menu-btn, #sidebar-resizer, .key-btn, .calc-action-btn, .var-tab, .icon-btn, #play-pause-btn {
             -webkit-user-select: none; /* Safari */
             -moz-user-select: none;    /* Firefox */
             -ms-user-select: none;     /* IE10+/Edge */
             user-select: none;         /* Standard */
+            -webkit-tap-highlight-color: transparent; /* Fix Mobile: Rimuove rettangolo blu al tocco */
+            outline: none;
         }
 
         /* --- MENU IMPOSTAZIONI PRO --- */
@@ -170,8 +172,74 @@
         }
         /* ------------------------ */
 
-        @media (max-width: 600px) {
-            #sidebar.open { width: 100vw; position: absolute; height: 100%; right: 0; }
+        @media (max-width: 1024px) {
+            /* FIX MOBILE: position:fixed + height:100dvh adatta il contenitore ESATTAMENTE allo spazio visibile */
+            #sidebar.open { 
+                width: 100vw; 
+                position: fixed; 
+                height: 100dvh; 
+                top: 0; 
+                right: 0; 
+                z-index: 1500; /* Assicura che stia sopra al canvas */
+            }
+            
+            /* Sposta i controlli di destra in basso */
+            #mobile-bottom-controls {
+                position: fixed;
+                bottom: 25px;
+                right: 20px;
+                top: auto;
+                z-index: 60;
+            }
+
+            /* --- FIX CALCOLATRICE PER BRAVE/MOBILE --- */
+            #calc-modal {
+                width: 100vw !important;
+                height: 100dvh !important; /* dvh si adatta alla barra indirizzi dinamica */
+                max-width: 100% !important;
+                max-height: 100dvh !important;
+                top: 0 !important;
+                left: 0 !important;
+                transform: none !important;
+                border-radius: 0 !important;
+                border: none !important;
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* Adatta il corpo interno */
+            .calc-body {
+                padding: 6px;
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                min-height: 0; /* Fondamentale per far funzionare lo scroll/flex interno */
+            }
+
+            /* Riduci ingombri input e tab */
+            .display-area { padding: 5px; margin-bottom: 5px; min-height: 50px; }
+            .var-tabs { margin-bottom: 2px; }
+            .var-tab { padding: 8px 2px; font-size: 12px; }
+            
+            /* Rendi la tastiera flessibile in altezza per riempire lo spazio */
+            .keypad {
+                flex: 1; /* Occupa tutto lo spazio rimanente */
+                gap: 3px;
+                margin-top: 5px;
+                min-height: 0; /* Permette ai tasti di rimpicciolirsi se necessario */
+            }
+
+            .key-btn, .calc-action-btn {
+                height: auto !important; /* Rimuove altezza fissa o padding eccessivo */
+                padding: 0 !important;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px; /* Font leggibile */
+            }
+            
+            /* Evita lo zoom automatico su input */
+            #expression-display { font-size: 16px; }
         }
 
         .sidebar-tabs {
@@ -322,7 +390,10 @@
         }
         .var-tabs { display: flex; gap: 2px; margin-bottom: 5px; border-bottom: 1px solid #444; padding-bottom: 0; flex-shrink: 0; }
         .var-tab {
-            flex: 1; background: #2a2a2a; border: 1px solid #444; border-bottom: none; color: #888;
+            flex: 1; background: #2a2a2a; 
+            border: 1px solid #444; 
+            border-top: 2px solid #444; /* FISSO: Bordo sempre di 2px per evitare il saltino */
+            border-bottom: none; color: #888;
             padding: 6px 2px; text-align: center; cursor: pointer; border-radius: 4px 4px 0 0;
             font-size: 11px; font-weight: bold; transition: 0.2s;
         }
@@ -505,7 +576,7 @@
                     <ul style="padding-left:20px;">
                         <li><strong>Grafico 3D:</strong> Mostra la struttura moltiplicativa. La disposizione degli elementi indica il prodotto.</li>
                         <li><strong>Verso Positivo:</strong> Il senso di percorrenza delle punte bianche sulle linee indica il verso positivo della moltiplicazione (es: se e_1*e_2=e_3, il punto segue 1-2-3).</li>
-                        <li><strong>Interazione:</strong> Cliccando sulle singole unità immaginarie è possibile isolare i cicli ad essi associati.</li>
+                        <li><strong>Interazione:</strong> Cliccando sulle singole unità immaginarie è possibile isolare le terne ad esse associate.</li>
                     </ul>
                 </div>
 
@@ -520,7 +591,7 @@
                     <p><strong>Selezione Algebra</strong> (Tasto <span class="help-icon-inline">&#x1D54A;</span>): Passa tra H, O, S.</p>
                     <ul style="padding-left:20px;">
                         <li><strong>Modifica Grafico:</strong> Circonferenza (H), Piano di Fano (O), PG(3,2) (S).</li>
-                        <li><strong>Aggiorna:</strong> Cicli, Divisori Zero (solo S) e Tabella.</li>
+                        <li><strong>Aggiorna:</strong> Terne, Divisori Zero (solo S) e Tabella.</li>
                     </ul>
                 </div>
 
@@ -558,7 +629,7 @@
                     <h3 style="color:#00aaff; margin-top:0;">5. Pannello Laterale (Tabelle)</h3>
                     <p>Apri con <span class="help-icon-inline">▦</span>. Tre sezioni:</p>
                     <ul style="padding-left:20px;">
-                        <li><strong>A. Cicli:</strong> Elenco cicli (1, 7 o 35). Clicca per isolare nel grafico. "Mostra tutto" per resettare.</li>
+                        <li><strong>A. Terne:</strong> Elenco terne (1, 7 o 35). Clicca per isolare nel grafico. "Mostra tutto" per resettare.</li>
                         <li><strong>B. Divisori Zero:</strong> (Solo S) Clicca una coppia per caricarla in calcolatrice e verificare il prodotto nullo.</li>
                         <li><strong>C. Tabella:</strong> (Colonna Sx * Riga Alto).
                             <ul>
@@ -597,7 +668,9 @@
             </div>
             
             <div class="header-actions">
-                <div id="toggle-history-btn" class="icon-btn" title="Cronologia">🕒</div>
+                <div id="toggle-history-btn" class="icon-btn" title="Cronologia">
+    <svg class="icon-svg" viewBox="0 0 24 24"><path d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+</div>
                 <div id="close-calc" class="icon-btn" title="Chiudi" style="font-size: 22px;">&times;</div>
             </div>
         </div>
@@ -605,7 +678,9 @@
         <div id="history-overlay">
             <div class="history-header">
                 <strong>Cronologia Risultati</strong>
-                <span id="btn-clear-log" style="cursor:pointer; color:#ff5555;">🗑️ Pulisci</span>
+                <span id="btn-clear-log" style="cursor:pointer; color:#ff5555; display:inline-flex; align-items:center;">
+    <svg viewBox="0 0 24 24" style="width:14px; height:14px; fill:currentColor; margin-right:4px;"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg> Pulisci
+</span>
             </div>
             <div id="calc-log">
                 <div style="text-align:center; color:#555; margin-top:20px; font-size:12px;">Nessun calcolo recente</div>
@@ -614,7 +689,7 @@
     
         <div class="calc-body">
             <div class="display-area">
-                <input type="text" id="expression-display" placeholder="Espressione..." autocomplete="off" inputmode="none">
+                <input type="text" id="expression-display" placeholder="Espressione..." autocomplete="off" spellcheck="false" autocorrect="off" autocapitalize="off" inputmode="none">
                 <div id="result-display">0</div>
             </div>
     
@@ -714,16 +789,18 @@
                     </div>
                 </div>
                 <h2 id="main-title">Sedenioni</h2>
-                <div class="bar-group">
+                <div class="bar-group" id="mobile-bottom-controls">
                     <div id="btn-alg-toggle" class="ui-btn" style="font-family:'Times New Roman'; font-weight:bold; font-size:22px; color:white;">&#x1D54A;</div>
                     <div id="calc-toggle-btn" class="ui-btn" title="Calcolatrice"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M7,2H17A2,2 0 0,1 19,4V20A2,2 0 0,1 17,22H7A2,2 0 0,1 5,20V4A2,2 0 0,1 7,2M7,4V8H17V4H7M7,10V12H9V10H7M11,10V12H13V10H11M15,10V12H17V10H15M7,14V16H9V14H7M11,14V16H13V14H11M15,14V16H17V14H15M7,18V20H9V18H7M11,18V20H13V18H11M15,18V20H17V18H15Z" /></svg></div>
-                    <div id="sidebar-toggle-btn" class="ui-btn" title="Menu Tabelle" style="font-size: 32px;">▦</div>
+                    <div id="sidebar-toggle-btn" class="ui-btn" title="Menu Tabelle">
+    <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM8 20H4v-4h4v4zm0-6H4v-4h4v4zm0-6H4V4h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V4h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V4h4v4z"/></svg>
+</div>
                 </div>
             </div>
         </div>
         <div id="sidebar">
             <div id="sidebar-resizer"></div> <div class="sidebar-tabs">
-                <button class="tab-btn active" data-tab="triplets" id="tab-btn-triplets">Cicli (35)</button>
+                <button class="tab-btn active" data-tab="triplets" id="tab-btn-triplets">Terne (35)</button>
                 <button class="tab-btn" data-tab="zerodiv" id="tab-btn-zerodiv">Divisori dello zero (84)</button>
                 <button class="tab-btn" data-tab="table" id="tab-btn-table">Tabella</button>
                 <button id="close-sidebar-btn" title="Chiudi">&times;</button>
@@ -852,7 +929,7 @@
                 return;
             }
 
-            // 2. Doppia selezione (Riga E Colonna): Isola il ciclo comune
+            // 2. Doppia selezione (Riga E Colonna): Isola le terne comuni
             if (r !== null && c !== null) {
                 // Se sono uguali o coinvolgono l'identità (0), resetta o mostra solo i punti
                 if (r === 0 || c === 0 || r === c) {
@@ -863,7 +940,7 @@
                     if (idx !== -1) {
                         highlightSingleTriplet(idx);
                     } else {
-                        // Se non formano un ciclo (es. Divisori Zero), nascondi le linee e mostra solo i due punti
+                        // Se non formano una terna (es. Divisori Zero), nascondi le linee e mostra solo i due punti
                         tripletVisuals.forEach(t => { 
                             t.mesh.visible = false; 
                             if(t.hitMesh) t.hitMesh.visible = false; 
@@ -879,7 +956,7 @@
                 return;
             }
 
-            // 3. Singola selezione (Solo Riga O Solo Colonna): Isola tutti i cicli connessi
+            // 3. Singola selezione (Solo Riga O Solo Colonna): Isola tutte le terne connesse
             const val = (r !== null) ? r : c;
             if (val === 0) resetView(); // L'identità è ovunque, resettiamo per non creare confusione
             else highlightConnections(val);
@@ -1203,7 +1280,7 @@ controls.maxDistance = 150;
         if(sidebarAlgToggle) sidebarAlgToggle.addEventListener('click', () => updateAlgebraState(null));
         if(sidebarAlgToggleTable) sidebarAlgToggleTable.addEventListener('click', () => updateAlgebraState(null));
 
-        // --- GESTIONE COLORI CICLI (Tema Geometrico Fisso) ---
+        // --- GESTIONE COLORI TERNE (Tema Geometrico Fisso) ---
         const TETRA_VERTICES = [5, 6, 7, 12];
         const MIDPOINTS = [1, 2, 3, 9, 10, 11];
 
@@ -1260,7 +1337,7 @@ controls.maxDistance = 150;
             if (limitIndex === 3) tripletCount = 1;      // Quaternioni
             if (limitIndex === 7) tripletCount = 7;      // Ottetti
             
-            document.getElementById('tab-btn-triplets').innerText = `Cicli (${tripletCount})`;
+            document.getElementById('tab-btn-triplets').innerText = `Terne (${tripletCount})`;
 
 	    const size = limitIndex + 1;
             const tabTable = document.getElementById('tab-btn-table');
@@ -1439,6 +1516,7 @@ controls.maxDistance = 150;
             setTimeout(() => {
                 const w = container.clientWidth; const h = container.clientHeight;
                 camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h); labelRenderer.setSize(w, h);
+                forceUpdate();
             }, 350);
         }
 
@@ -1453,6 +1531,7 @@ controls.maxDistance = 150;
                 const w = container.clientWidth; const h = container.clientHeight;
                 camera.aspect = w / h; camera.updateProjectionMatrix(); 
                 renderer.setSize(w, h); labelRenderer.setSize(w, h);
+                forceUpdate();
             }, 350);
         });
 
@@ -1497,6 +1576,7 @@ controls.maxDistance = 150;
             
             const w = container.clientWidth; const h = container.clientHeight;
             camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h); labelRenderer.setSize(w, h);
+            forceUpdate();
         }
 
         // Mouse Events
@@ -1728,7 +1808,8 @@ function validateAssociativity(exprStr) {
 
             let level = 0;
             let chain = []; 
-            let lastWasOperand = false; // Fondamentale per distinguere il meno unario
+            let lastWasOperand = false; 
+            let pendingInverse = false; // Flag per tracciare la divisione
 
             for(let i=0; i<tokens.length; i++) {
                 let t = tokens[i];
@@ -1774,13 +1855,24 @@ function validateAssociativity(exprStr) {
                     } 
                     // Operatori che continuano la catena (Moltiplicazione, Divisione)
                     else if(t === '*' || t === '/') {
+                        // Se è una divisione, il prossimo operando sarà un inverso
+                        if (t === '/') pendingInverse = true;
+                        else pendingInverse = false;
+                        
                         lastWasOperand = false;
                         continue;
                     }
                     // Operandi (Variabili, Numeri, e_n)
                     else {
                         if(!isScalar(t)) {
-                            chain.push(t);
+                            // Se c'era una divisione pendente, modifichiamo il nome dell'operando nella catena
+                            // Così 'b' diventa 'inv(b)', impedendo al validatore di considerarli uguali (A===C)
+                            if (pendingInverse) {
+                                chain.push("inv(" + (typeof t === 'string' ? t : 'Expr') + ")");
+                                pendingInverse = false;
+                            } else {
+                                chain.push(t);
+                            }
                         }
                         lastWasOperand = true;
 
@@ -1853,7 +1945,7 @@ function validateAssociativity(exprStr) {
             exprStr = processedStr.replace(/\[/g, 'comm(').replace(/\]/g, ')');
 
             // Tokenizer modificato per includere "e_"
-            let tokens = exprStr.replace(/\s+/g, '').split(/([+\-*/(),]|norm|conj|inv|comm|e_)/).filter(t => t);
+            let tokens = exprStr.replace(/\s+/g, '').split(/([+\-*/(),]|norm|conj|inv|comm|e_\()/).filter(t => t);
             
             // Unary Minus Detection: if '-' is at start or follows operator/paren, change to '~'
             for(let i=0; i<tokens.length; i++) {
@@ -1900,7 +1992,8 @@ function validateAssociativity(exprStr) {
                     opStack.pop(); // Remove '('
 
                     // Check if function preceding '('
-                    if (opStack.length > 0 && ops[opStack[opStack.length-1]].type === 'func_var') {
+                    const prevOp = opStack.length > 0 ? opStack[opStack.length-1] : null;
+                    if (prevOp && ops[prevOp] && ops[prevOp].type === 'func_var') {
                         // We found a variable function (comm).
                         // We need to know how many args. 
                         // Simplified: Count commas inside the parenthesis scope.
@@ -1941,8 +2034,8 @@ function validateAssociativity(exprStr) {
             let level = 0;
             let commScopes = []; // { start: index of 'comm', args: 1 }
             
-            // Reset tokens for clarity
-            const rawTokens = exprStr.replace(/\s+/g, '').split(/([+\-*/(),]|norm|conj|inv|comm)/).filter(t => t);
+            // Reset tokens for clarity (FIX: Includi e_ nello split per coerenza)
+            const rawTokens = exprStr.replace(/\s+/g, '').split(/([+\-*/(),]|norm|conj|inv|comm|e_)/).filter(t => t);
             tokens = []; // Ricostruiamo l'array pulito
             
             // Gestione Unary Plus (+) e Unary Minus (-)
@@ -2016,7 +2109,9 @@ function validateAssociativity(exprStr) {
                          finalQueue.push(finalStack.pop());
                      }
                      finalStack.pop(); 
-                     if (finalStack.length > 0 && ops[finalStack[finalStack.length-1]].type === 'func') {
+                     // FIX: Verifica che l'elemento esista in ops prima di leggere .type (evita crash su parentesi annidate)
+                     const topToken = finalStack[finalStack.length-1];
+                     if (finalStack.length > 0 && ops[topToken] && ops[topToken].type === 'func') {
                          finalQueue.push(finalStack.pop());
                      }
                  }
@@ -2150,7 +2245,12 @@ function validateAssociativity(exprStr) {
             for(let i=0; i<=limit; i++) v[i] = Math.floor(Math.random()*21) - 10;
             setGrid(v); saveVar(currentVar);
         });
-        calcAlgSelect.addEventListener('change', updateGridVisibility);
+        calcAlgSelect.addEventListener('change', (e) => {
+            const newLimit = parseInt(e.target.value);
+            // Sincronizza l'algebra globale con la scelta della calcolatrice
+            updateAlgebraState(newLimit);
+            updateGridVisibility();
+        });
 
 window.calcSmartParen = function() {
             const input = document.getElementById('expression-display');
@@ -2260,14 +2360,31 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
             if(action === 'eval') {
                 saveVar(currentVar); 
                 try {
+                    // --- 0. PRE-PROCESSING (Moltiplicazione Implicita) ---
+                    let val = disp.value;
+                    
+                    // Supporto sintassi breve: e_5 -> e_(5)
+                    val = val.replace(/e_(\d+)/g, 'e_($1)');
+
+                    // Moltiplicazione Implicita 1: Numeri/ParentesiChiuse seguiti da Lettere/ParentesiAperte/e_
+                    // Esempi: 2e -> 2*e, 2( -> 2*(, )e -> )*e, )( -> )*(, 2a -> 2*a
+                    val = val.replace(/([\d\)\]])\s*([a-zA-Z_\(\[])/g, '$1*$2');
+                    
+                    // Moltiplicazione Implicita 2: Variabili (a,b,d) seguite da Lettera/ParentesiAperta
+                    // Esempi: ab -> a*b, a( -> a*(, d( -> d*(
+                    val = val.replace(/([abd])\s*([a-zA-Z_\(\[])/g, '$1*$2');
+                    
+                    // Moltiplicazione Implicita 3: Variabile c (esclude le keyword 'comm', 'conj', 'cnj')
+                    // Inserisce * solo se 'c' è seguito da a,b,d, numeri, parentesi o e_
+                    val = val.replace(/(c)\s*([abd\(\[\d]|e_)/g, '$1*$2');
+
                     // 1. Controllo Assciatività (Ottetti/Sedenioni)
-                    // Se la funzione esiste (l'abbiamo aggiunta prima), la esegue
                     if(typeof validateAssociativity === 'function') {
-                        validateAssociativity(disp.value);
+                        validateAssociativity(val);
                     }
 
                     // 2. Valutazione Espressione
-                    const res = evaluateExpression(disp.value);
+                    const res = evaluateExpression(val);
                     const ansId = storedAns.length + 1;
                     storedAns.push(res);
                     
@@ -2275,9 +2392,22 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
                     const formatVec = (v) => {
                         let s = []; let allZero = true;
                         v.forEach((val, i) => {
-                            if(Math.abs(val) > 0.001) {
+                            let absVal = Math.abs(val);
+                            if(absVal > 0.001) {
                                 allZero = false;
-                                let term = (val < 0 ? "-" : "+") + Math.abs(parseFloat(val.toFixed(3)));
+                                let valStr;
+                                
+                                // Se >= 10^9 usa notazione 1.23*10^n
+                                if(absVal >= 1e9) {
+                                    let parts = absVal.toExponential(3).split('e');
+                                    let mantissa = parseFloat(parts[0]);
+                                    let exponent = parseInt(parts[1]); // Rimuove il + superfluo
+                                    valStr = mantissa + "*10<sup>" + exponent + "</sup>";
+                                } else {
+                                    valStr = parseFloat(absVal.toFixed(3));
+                                }
+
+                                let term = (val < 0 ? "-" : "+") + valStr;
                                 if(i > 0) term += "e<sub>" + i + "</sub>"; 
                                 s.push(term);
                             }
@@ -2382,22 +2512,20 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
         });
         setupGrid();
 
-        // --- LOGICA TRASCINAMENTO (DRAG & DROP) ---
+        // --- LOGICA TRASCINAMENTO (DRAG & DROP - MOUSE + TOUCH) ---
         const calcHeader = document.querySelector('.calc-header');
-        calcHeader.style.cursor = 'move'; // Cambia cursore
+        calcHeader.style.cursor = 'move'; 
         
         let isDragging = false;
         let dragOffsetX = 0;
         let dragOffsetY = 0;
 
-        calcHeader.addEventListener('mousedown', (e) => {
+        // Funzione unificata per iniziare il trascinamento
+        function startDrag(clientX, clientY, e) {
             // Impedisce il drag se clicchi sui pulsanti dentro l'header
             if(e.target.closest('.icon-btn') || e.target.closest('select')) return;
             
-            e.preventDefault();
             isDragging = true;
-            
-            // Calcola la posizione attuale per evitare scatti
             const rect = calcModal.getBoundingClientRect();
             
             // Disabilita il centraggio CSS automatico
@@ -2406,21 +2534,44 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
             calcModal.style.left = rect.left + 'px';
             calcModal.style.top = rect.top + 'px';
             
-            // Calcola dove hai cliccato rispetto all'angolo della finestra
-            dragOffsetX = e.clientX - rect.left;
-            dragOffsetY = e.clientY - rect.top;
+            dragOffsetX = clientX - rect.left;
+            dragOffsetY = clientY - rect.top;
+        }
+
+        // --- MOUSE EVENTS ---
+        calcHeader.addEventListener('mousedown', (e) => {
+            // FIX: Se clicchiamo su select o bottoni, non prevenire il default (altrimenti la tendina non si apre)
+            if(e.target.closest('.icon-btn') || e.target.closest('select')) return;
+            
+            e.preventDefault();
+            startDrag(e.clientX, e.clientY, e);
         });
 
         document.addEventListener('mousemove', (e) => {
             if (!isDragging) return;
-            // Muovi la finestra
             calcModal.style.left = (e.clientX - dragOffsetX) + 'px';
             calcModal.style.top = (e.clientY - dragOffsetY) + 'px';
         });
 
-        document.addEventListener('mouseup', () => {
-            isDragging = false;
-        });
+        document.addEventListener('mouseup', () => { isDragging = false; });
+
+        // --- TOUCH EVENTS (FIX TABLET) ---
+        calcHeader.addEventListener('touchstart', (e) => {
+            if(e.target.closest('.icon-btn') || e.target.closest('select')) return;
+            e.preventDefault(); // Blocca lo scroll della pagina mentre trascini
+            const touch = e.touches[0];
+            startDrag(touch.clientX, touch.clientY, e);
+        }, {passive: false});
+
+        document.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault(); // Blocca lo scroll della pagina
+            const touch = e.touches[0];
+            calcModal.style.left = (touch.clientX - dragOffsetX) + 'px';
+            calcModal.style.top = (touch.clientY - dragOffsetY) + 'px';
+        }, {passive: false});
+
+        document.addEventListener('touchend', () => { isDragging = false; });
 
         window.addEventListener('resize', () => {
             const w = container.clientWidth; const h = container.clientHeight;
