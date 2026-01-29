@@ -389,16 +389,33 @@
         #calc-modal.active { display: flex; }
 
         .calc-header { 
-            padding: 10px 15px; background: #2a2a30; border-bottom: 1px solid #444;
+            /* Riduciamo il padding laterale per dare più spazio ai tasti su mobile */
+            padding: 5px 5px; background: #2a2a30; border-bottom: 1px solid #444;
             display: flex; justify-content: space-between; align-items: center; color: white; 
-            height: 50px; box-sizing: border-box; flex-shrink: 0;
+            height: 50px; box-sizing: border-box; flex-shrink: 0; gap: 5px;
         }
-        .calc-mode-wrapper { display: flex; align-items: center; gap: 10px; flex: 1; position: relative; }
+        .calc-mode-wrapper { 
+            display: flex; align-items: center; gap: 4px; flex: 1; position: relative; 
+            min-width: 0; /* Permette al contenuto di restringersi se serve */
+        }
+        /* Assicura che X e Cronologia non vengano mai schiacciati o spinti fuori */
+        .header-actions { flex-shrink: 0; margin-left: auto; }
+        
+        /* Forza il selettore a non essere più largo del necessario */
+        #calc-alg-select { 
+            flex-shrink: 1; 
+            min-width: 0; 
+            max-width: 100%;
+            text-overflow: ellipsis; 
+        }
         .calc-mode-sel { 
             background: #0066cc; color: white; border: 1px solid #0088ff; 
-            padding: 5px 10px; font-size: 13px; font-weight: bold;
+            padding: 5px 12px; font-size: 13px; font-weight: bold;
             border-radius: 4px; cursor: pointer; outline: none;
             transition: background 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            white-space: nowrap; /* Impedisce alla freccia di andare a capo */
+            width: auto;         /* Si adatta al contenuto (H/O/S) */
+            min-width: fit-content;
         }
         
         /* --- MENU FORMULE CALCOLATRICE --- */
@@ -1694,6 +1711,10 @@ controls.dampingFactor = 0.05;
                 } else {
                     zdBtnCalc.style.display = 'none';
                     zdContentGrid.innerHTML = ''; // CORRETTO: Usa zdContentGrid
+                    
+                    // FIX: Chiude l'overlay se cambiamo algebra (non siamo più in Sedenioni)
+                    if(zdOverlay) zdOverlay.classList.remove('visible');
+                    if(zdBtnCalc) zdBtnCalc.classList.remove('active');
                 }
             }
 
@@ -3021,8 +3042,11 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
 
         // --- MOUSE EVENTS ---
         calcHeader.addEventListener('mousedown', (e) => {
-            // FIX: Se clicchiamo su select o bottoni, non prevenire il default (altrimenti la tendina non si apre)
-            if(e.target.closest('.icon-btn') || e.target.closest('select')) return;
+            // FIX: Se clicchiamo su select, bottoni o MENU FORMULE, non trascinare
+            if(e.target.closest('.icon-btn') || 
+               e.target.closest('.calc-mode-sel') || 
+               e.target.closest('select') ||
+               e.target.closest('#calc-formula-menu')) return;
             
             e.preventDefault();
             startDrag(e.clientX, e.clientY, e);
@@ -3038,7 +3062,12 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
 
         // --- TOUCH EVENTS (FIX TABLET) ---
         calcHeader.addEventListener('touchstart', (e) => {
-            if(e.target.closest('.icon-btn') || e.target.closest('select')) return;
+            // FIX: Esclude icone, selettori E il menu delle formule dal trascinamento
+            if(e.target.closest('.icon-btn') || 
+               e.target.closest('.calc-mode-sel') || 
+               e.target.closest('select') || 
+               e.target.closest('#calc-formula-menu')) return; // <-- QUESTA RIGA SBLOCCA I CLIC SULLE FORMULE
+            
             e.preventDefault();
             const touch = e.touches[0];
             startDrag(touch.clientX, touch.clientY, e);
