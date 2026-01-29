@@ -16,10 +16,14 @@
             transition: background 0.5s ease;
         }
 
+        
         /* --- SFONDI AMBIENTALI --- */
-        .bg-default { background-color: #303030; }
-        .bg-deep-space { background: radial-gradient(circle at center, #0b1026 0%, #000000 100%); }
-        .bg-studio { background: radial-gradient(circle at center, #3a3a40 0%, #111 60%, #000 100%); }
+        /* 1. Slate Mist */
+        .bg-default { background-color: #2b3a42; } 
+        /* 2. Cyber Gradient */
+        .bg-deep-space { background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); }
+        /* 3. Blueprint (Sostituisce il bianco) */
+        .bg-studio { background-color: #001a33; background-image: radial-gradient(#002b55 1px, transparent 1px); background-size: 40px 40px; }
 
         /* --- TOP BAR --- */
         #top-bar {
@@ -63,7 +67,7 @@
             -moz-user-select: none;    /* Firefox */
             -ms-user-select: none;     /* IE10+/Edge */
             user-select: none;         /* Standard */
-            -webkit-tap-highlight-color: transparent; /* Fix Mobile: Rimuove rettangolo blu al tocco */
+            -webkit-tap-highlight-color: transparent;
             outline: none;
         }
 
@@ -103,7 +107,7 @@
             background: #2a2a30; border: 1px solid #555; border-radius: 50%;
             color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
             transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            padding: 0; /* Rimuove padding default */
+            padding: 0;
         }
         #play-pause-btn:hover { background: #444; border-color: #0088ff; color: #0088ff; transform: scale(1.05); }
         #play-pause-btn svg { width: 14px; height: 14px; fill: currentColor; }
@@ -135,11 +139,10 @@
         
         /* --- RESIZER MINIMAL --- */
         #sidebar-resizer {
-            /* Posizionato a cavallo del bordo sinistro - AREA RIDOTTA per non coprire la tabella */
             position: absolute; 
-            top: 40px; /* Spostato all'altezza corretta dei comandi */
+            top: 40px;
             left: -20px; 
-            height: 60px; /* Altezza limitata, non copre più tutta la colonna */
+            height: 60px;
             width: 40px;
             cursor: ew-resize; z-index: 150;
             background: transparent;
@@ -157,34 +160,30 @@
         /* La maniglia centrale (pillola piccola senza frecce) */
         #sidebar-resizer::after {
             content: ''; 
-            width: 6px; height: 24px; /* Molto più piccolo e stretto */
+            width: 6px; height: 24px;
             background: #0088ff; 
-            border-radius: 10px; /* Forma a pillola */
+            border-radius: 10px;
             position: absolute; left: 50%; transform: translateX(-50%);
             box-shadow: 0 1px 4px rgba(0,0,0,0.5);
             transition: all 0.2s;
             z-index: 151;
         }
 
-        /* Effetti Hover: diventa più luminoso e leggermente più alto */
         #sidebar-resizer:hover::before, #sidebar-resizer.active::before { opacity: 1; }
         #sidebar-resizer:hover::after, #sidebar-resizer.active::after {
             height: 32px; background: #33aaff; transform: translateX(-50%) scale(1.1);
         }
-        /* ------------------------ */
 
         @media (max-width: 1024px) {
-            /* FIX MOBILE: position:fixed + height:100dvh adatta il contenitore ESATTAMENTE allo spazio visibile */
             #sidebar.open { 
                 width: 100vw; 
                 position: fixed; 
                 height: 100dvh; 
                 top: 0; 
                 right: 0; 
-                z-index: 1500; /* Assicura che stia sopra al canvas */
+                z-index: 1500;
             }
             
-            /* Sposta i controlli di destra in basso */
             #mobile-bottom-controls {
                 position: fixed;
                 bottom: 25px;
@@ -196,7 +195,7 @@
             /* --- FIX CALCOLATRICE PER BRAVE/MOBILE --- */
             #calc-modal {
                 width: 100vw !important;
-                height: 100dvh !important; /* dvh si adatta alla barra indirizzi dinamica */
+                height: 100dvh !important;
                 max-width: 100% !important;
                 max-height: 100dvh !important;
                 top: 0 !important;
@@ -214,32 +213,29 @@
                 flex: 1;
                 display: flex;
                 flex-direction: column;
-                min-height: 0; /* Fondamentale per far funzionare lo scroll/flex interno */
+                min-height: 0;
             }
 
-            /* Riduci ingombri input e tab */
             .display-area { padding: 5px; margin-bottom: 5px; min-height: 50px; }
             .var-tabs { margin-bottom: 2px; }
             .var-tab { padding: 8px 2px; font-size: 12px; }
             
-            /* Rendi la tastiera flessibile in altezza per riempire lo spazio */
             .keypad {
-                flex: 1; /* Occupa tutto lo spazio rimanente */
+                flex: 1;
                 gap: 3px;
                 margin-top: 5px;
-                min-height: 0; /* Permette ai tasti di rimpicciolirsi se necessario */
+                min-height: 0;
             }
 
             .key-btn, .calc-action-btn {
-                height: auto !important; /* Rimuove altezza fissa o padding eccessivo */
+                height: auto !important;
                 padding: 0 !important;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 16px; /* Font leggibile */
+                font-size: 16px;
             }
             
-            /* Evita lo zoom automatico su input */
             #expression-display { font-size: 16px; }
         }
 
@@ -283,7 +279,6 @@
             border-radius: 4px; padding: 10px 5px; font-size: 11px;
             cursor: pointer; text-align: center; font-family: 'Segoe UI', sans-serif;
             transition: all 0.2s;
-            /* Impedisce la selezione del testo */
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
@@ -292,17 +287,13 @@
         .fano-btn:hover { background: #333; border-color: #666; }
         
         .fano-btn.active { 
-            /* Sfondo SCURO tintato col colore del tasto (simile alle terne attive) */
             background-color: color-mix(in srgb, var(--fano-color), black 70%) !important;
             
-            /* Bordo del colore specifico */
             border: 1px solid var(--fano-color) !important; 
             
-            /* Testo bianco standard (NO grassetto) */
             color: #eeeeee !important; 
             font-weight: normal !important;
             
-            /* Nessuna ombra o trasformazione */
             box-shadow: none !important; 
             transform: none !important;
             outline: none !important;
@@ -326,14 +317,14 @@
 
         /* --- TABLE STYLES --- */
         #table-scroll { 
-            flex: 0 0 auto; 
+            flex: 1; 
             overflow: auto; 
-            height: 300px; /* Altezza iniziale di default */
+            height: auto;
             min-height: 50px;
             padding: 0; 
             background: #202025; 
             position: relative; 
-            transition: none !important; /* Disabilita animazioni durante il resize */
+            transition: none !important;
         }
         #tab-table {
             overflow-y: auto;
@@ -402,13 +393,70 @@
             display: flex; justify-content: space-between; align-items: center; color: white; 
             height: 50px; box-sizing: border-box; flex-shrink: 0;
         }
-        .calc-mode-wrapper { display: flex; align-items: center; gap: 10px; flex: 1; }
+        .calc-mode-wrapper { display: flex; align-items: center; gap: 10px; flex: 1; position: relative; }
         .calc-mode-sel { 
             background: #0066cc; color: white; border: 1px solid #0088ff; 
             padding: 5px 10px; font-size: 13px; font-weight: bold;
             border-radius: 4px; cursor: pointer; outline: none;
             transition: background 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
+        
+        /* --- MENU FORMULE CALCOLATRICE --- */
+        #calc-formula-menu {
+            position: absolute; top: 100%; left: 0; margin-top: 8px;
+            background: rgba(30, 30, 35, 0.98); border: 1px solid #555; border-radius: 6px;
+            padding: 10px; width: 280px; max-height: 300px; overflow-y: auto;
+            display: none; flex-direction: column; gap: 5px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); z-index: 2500;
+            backdrop-filter: blur(10px);
+        }
+        #calc-formula-menu.visible, #calc-zerodiv-menu.visible { display: flex; animation: fadeInMenu 0.2s ease-out; }
+        
+        /* Stile specifico per il menu divisori zero */
+        /* --- OVERLAY DIVISORI ZERO --- */
+        #zerodiv-overlay {
+            position: absolute; 
+            top: 50px; /* Altezza header */
+            left: 0; right: 0; bottom: 0;
+            background: rgba(25, 20, 20, 0.98); 
+            z-index: 150; /* Sopra al calc-body */
+            display: none; 
+            flex-direction: column;
+            backdrop-filter: blur(5px);
+        }
+        #zerodiv-overlay.visible { display: flex; animation: fadeInMenu 0.2s ease-out; }
+
+        #zerodiv-content-grid {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 PER RIGA */
+            gap: 6px;
+            align-content: start;
+        }
+
+        .zerodiv-grid-btn {
+            background: #2a1515; 
+            color: #ffcccc; 
+            border: 1px solid #442222;
+            border-radius: 4px; 
+            padding: 5px 2px; 
+            font-family: 'Times New Roman', serif;
+            font-size: 15px; /* Aumentato come nella sidebar */
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            text-align: center;
+            transition: all 0.2s;
+            min-height: 45px;
+            line-height: 1.2;
+            white-space: nowrap; /* Impedisce il testo a capo */
+        }
+        .zerodiv-grid-btn sub { font-size: 0.7em; vertical-align: baseline; position: relative; top: 0.3em; margin-left: 1px; }
+        .zerodiv-grid-btn:hover { background: #552222; border-color: #ff4444; transform: scale(1.05); }
+        .zerodiv-grid-btn:active { transform: scale(0.95); }
         .header-actions { display: flex; gap: 15px; align-items: center; }
         .icon-btn { cursor: pointer; font-size: 18px; color: #aaa; transition: 0.2s; user-select: none;}
         .icon-btn:hover { color: white; transform: scale(1.1); }
@@ -421,13 +469,13 @@
         .display-area {
             background: #111; border: 1px solid #444; border-radius: 6px;
             padding: 8px 10px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 2px;
-            flex-shrink: 0; position: relative; /* Necessario per l'overlay */
+            flex-shrink: 0; position: relative;
         }
         /* Contenitore relativo per allineare input e evidenziatore */
         .input-wrapper {
             position: relative; 
             width: 100%; 
-            height: 24px; /* Altezza leggermente aumentata */
+            height: 24px;
             display: flex;
             align-items: center;
         }
@@ -441,13 +489,13 @@
             height: 100%;
             
             /* Proprietà Font IDENTICHE */
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace; /* Font monospazio stretto */
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
             font-size: 14px;
-            line-height: 24px; /* Deve corrispondere all'altezza del container */
-            letter-spacing: 0px; /* Evita il drift orizzontale */
+            line-height: 24px;
+            letter-spacing: 0px;
             
             /* Spaziatura IDENTICA */
-            padding: 0 4px; /* Un piccolo padding aiuta a non tagliare i bordi */
+            padding: 0 4px;
             margin: 0;
             border: none;
             box-sizing: border-box;
@@ -456,14 +504,14 @@
 
         #expression-display {
             background: transparent;
-            color: #ddd; /* Colore testo principale */
+            color: #ddd;
             outline: none;
             z-index: 2;
         }
 
         #highlight-layer {
-            color: transparent; /* Il testo è invisibile, si vede solo lo sfondo dello span */
-            white-space: pre; /* Mantiene la formattazione degli spazi */
+            color: transparent;
+            white-space: pre;
             overflow: hidden;
             pointer-events: none;
             z-index: 1;
@@ -472,7 +520,7 @@
         /* Stili per le parentesi evidenziate */
         .hl-match {
             background-color: rgba(0, 136, 255, 0.4); 
-            color: #fff; /* Rende la parentesi visibile e bianca */
+            color: #fff;
             border-radius: 2px;
             box-shadow: 0 0 4px #0088ff;
             font-weight: bold;
@@ -491,7 +539,7 @@
         .var-tab {
             flex: 1; background: #2a2a2a; 
             border: 1px solid #444; 
-            border-top: 2px solid #444; /* FISSO: Bordo sempre di 2px per evitare il saltino */
+            border-top: 2px solid #444;
             border-bottom: none; color: #888;
             padding: 6px 2px; text-align: center; cursor: pointer; border-radius: 4px 4px 0 0;
             font-size: 11px; font-weight: bold; transition: 0.2s;
@@ -518,7 +566,7 @@
             background: #2a2a30; border: 1px solid #444; color: #ccc;
             padding: 8px 0; border-radius: 4px; cursor: pointer; flex: 1;
             font-size: 11px; font-weight: bold; transition: all 0.2s;
-            text-align: center; /* Maiuscolo rimosso */
+            text-align: center;
         }
         .calc-action-btn:hover { background: #3a3a40; color: white; border-color: #0088ff; }
         .calc-action-btn:active { transform: scale(0.96); }
@@ -566,7 +614,7 @@
             min-height: 50px;
         }
         
-        #table-resizer {
+        #table-resizer, #triplets-resizer {
             height: 16px;
             width: 100%;
             background: #2a2a30;
@@ -581,7 +629,7 @@
             z-index: 10;
         }
 
-        #table-resizer::after {
+        #table-resizer::after, #triplets-resizer::after {
             content: '';
             width: 40px;
             height: 4px;
@@ -590,7 +638,7 @@
             box-shadow: 0 0 5px rgba(0, 136, 255, 0.5);
         }
 
-        #table-resizer:hover::after {
+        #table-resizer:hover::after, #triplets-resizer:hover::after {
             background: #33aaff;
             width: 60px;
         }
@@ -764,6 +812,15 @@
                     <option value="7">Ottetti (&#x1D546;)</option>
                     <option value="15" selected>Sedenioni (&#x1D54A;)</option>
                 </select>
+                
+                <button id="calc-formulas-btn" class="calc-mode-sel" style="background:#333; border-color:#555; color:#ccc;">
+                    Formule &#9662;
+                </button>
+                <div id="calc-formula-menu"></div>
+
+                <button id="calc-zerodiv-btn" class="calc-mode-sel" style="background:#2a1515; border-color:#552222; color:#ffcccc; display:none; padding: 5px 10px;">
+                    a&middot;b=0
+                </button>
             </div>
             
             <div class="header-actions">
@@ -784,6 +841,14 @@
             <div id="calc-log">
                 <div style="text-align:center; color:#555; margin-top:20px; font-size:12px;">Nessun calcolo recente</div>
             </div>
+        </div>
+
+        <div id="zerodiv-overlay">
+            <div style="padding: 10px; border-bottom: 1px solid #442222; background: #2a1515; color:#ffcccc; font-weight:bold; display:flex; justify-content:space-between; align-items:center;">
+                <span>Divisori dello zero</span>
+                <span id="close-zerodiv-overlay" style="cursor:pointer; font-size:20px;">&times;</span>
+            </div>
+            <div id="zerodiv-content-grid"></div>
         </div>
     
         <div class="calc-body">
@@ -864,6 +929,11 @@
                                 <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
                                 <span>Reset Vista</span>
                             </button>
+
+                            <button id="grid-toggle-btn" class="menu-btn" title="Mostra/Nascondi Griglia">
+                                <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM8 20H4v-4h4v4zm0-6H4v-4h4v4zm0-6H4V4h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V4h4v4zm6 12h-4v-4h4v4zm0-6h-4v-4h4v4zm0-6h-4V4h4v4z"/></svg>
+                                <span id="grid-label">Griglia: OFF</span>
+                            </button>
                             
                             <button id="help-btn-trigger" class="menu-btn" title="Apri Guida">
                                 <svg viewBox="0 0 24 24"><path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"/></svg>
@@ -922,22 +992,29 @@
                 <button id="close-sidebar-btn" title="Chiudi">&times;</button>
             </div>
             <div id="tab-triplets" class="tab-content active">
-                <div style="padding:10px; border-bottom:1px solid #444; display:grid; grid-template-columns: 1fr auto 1fr; align-items:center;">
+                <div style="padding:10px;
+border-bottom:1px solid #444; display:grid; grid-template-columns: 1fr auto 1fr; align-items:center;">
                     <div></div> 
-                    <button id="sidebar-alg-toggle" style="background:transparent; border:1px solid #555; color:#eee; width:32px; height:32px; border-radius:6px; font-family:'Times New Roman'; font-weight:normal; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s;" title="Cambia Dimensione">
+                    <button id="sidebar-alg-toggle" style="background:transparent;
+border:1px solid #555; color:#eee; width:32px; height:32px; border-radius:6px; font-family:'Times New Roman'; font-weight:normal; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+transition:0.2s;" title="Cambia Dimensione">
                         &#x1D54A;
                     </button>
-                    <button id="show-all-btn" style="background:#008855; border:none; color:white; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:11px; justify-self: end;">Mostra Tutto</button>
+                    <button id="show-all-btn" style="background:#008855;
+border:none; color:white; padding:6px 10px; border-radius:4px; cursor:pointer; font-size:11px; justify-self: end;">Mostra Tutto</button>
                 </div>
+                
                 <div id="triplets-scroll">
                     <div class="triplets-grid" id="buttons-container"></div>
-                    
-                    <div id="fano-container-wrapper" style="display:none; margin-top: 20px; border-top: 1px solid #555; padding-top: 15px; padding-bottom: 20px;">
-                        <div style="padding: 0 0 10px 5px; font-size: 11px; font-weight: bold; color: #888; text-transform: uppercase; letter-spacing: 1px;">
-                            Piani di Fano (15)
-                        </div>
-                        <div class="triplets-grid" id="fano-grid"></div>
-                    </div>
+                </div>
+
+                <div id="triplets-resizer" style="display: none;"></div>
+
+                <div id="fano-container-wrapper" style="display:none; height: 220px; flex-shrink: 0; overflow-y: auto;
+                    padding:10px; border-top:1px solid #444; background:#202025;">
+                    <div class="formula-group-title" style="margin-bottom:10px;
+                    color:#0088ff;">Piani di Fano (15)</div>
+                    <div class="triplets-grid" id="fano-grid"></div>
                 </div>
 
             </div>
@@ -952,15 +1029,19 @@
                 </div>
                 <div id="table-scroll">
                     <table id="sedenion-table"></table>
-                    <div id="fano-table-wrapper" style="display:none; padding:10px; border-top:1px solid #444; background:#202025;">
-                        <div class="formula-group-title" style="margin-bottom:10px; color:#0088ff;">Piani di Fano (Evidenzia Sottospazi)</div>
-                        <div class="triplets-grid" id="fano-grid-table"></div>
-                    </div>
                 </div>
+                
+                <div id="table-resizer" style="display: none;"></div>
+                
+                <div id="fano-table-wrapper" style="display:none; height: 220px; flex-shrink: 0; overflow-y: auto;
+                    padding:10px; border-top:1px solid #444; background:#202025;">
+                    <div class="formula-group-title" style="margin-bottom:10px;
+                    color:#0088ff;">Piani di Fano (Evidenzia Sottospazi)</div>
+                    <div class="triplets-grid" id="fano-grid-table"></div>
+                </div>
+                
                 <div id="table-hint">Convenzione: Scegliere valore Colonna (Sx) &times; valore Riga (Alto).</div>
-                <div id="table-resizer"></div>
-                <div id="formula-container"></div>
-            </div>
+                </div>
         </div>
     </div>
 
@@ -1081,16 +1162,13 @@
 
             // 2. Doppia selezione (Riga E Colonna): Isola le terne comuni
             if (r !== null && c !== null) {
-                // Se sono uguali o coinvolgono l'identità (0), resetta o mostra solo i punti
                 if (r === 0 || c === 0 || r === c) {
                     resetView(); 
                 } else {
-                    // Cerca la tripletta che contiene entrambi
                     const idx = POSITIVE_TRIPLETS.findIndex(t => t.includes(r) && t.includes(c));
                     if (idx !== -1) {
                         highlightSingleTriplet(idx);
                     } else {
-                        // Se non formano una terna (es. Divisori Zero), nascondi le linee e mostra solo i due punti
                         tripletVisuals.forEach(t => { 
                             t.mesh.visible = false; 
                             if(t.hitMesh) t.hitMesh.visible = false; 
@@ -1108,7 +1186,7 @@
 
             // 3. Singola selezione (Solo Riga O Solo Colonna): Isola tutte le terne connesse
             const val = (r !== null) ? r : c;
-            if (val === 0) resetView(); // L'identità è ovunque, resettiamo per non creare confusione
+            if (val === 0) resetView();
             else highlightConnections(val);
         }
 
@@ -1116,7 +1194,7 @@
             const table = document.getElementById('sedenion-table');
             
             // OPTIMIZATION: Ricostruisci il DOM solo se cambia dimensione (cambio algebra)
-            const neededRows = limitIndex + 2; // 1 header + (limitIndex+1) righe dati
+            const neededRows = limitIndex + 2;
             const needsRebuild = table.rows.length !== neededRows;
 
             if (needsRebuild) {
@@ -1232,12 +1310,11 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 
 // Rileva se il dispositivo è touch
-const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-// 15 per PC (Touchpad), ~1.5 per Telefono
-controls.zoomSpeed = isTouchDevice ? 1.5 : 15; 
+        const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+        controls.zoomSpeed = isTouchDevice ? 1.5 : 15; 
 
-controls.minDistance = 2; 
-controls.maxDistance = 150;
+        controls.minDistance = 1; 
+        controls.maxDistance = 60;
 
 	controls.target.set(0, 3, 0); 
         controls.update();
@@ -1269,7 +1346,7 @@ controls.maxDistance = 150;
         pts[8] = new THREE.Vector3().addVectors(v_e5, v_e6).add(v_e7).add(v_e12).multiplyScalar(0.25);
 
         const pointObjects = {}; 
-        // OTTIMIZZAZIONE: Ridotti segmenti da 16 a 10/8 (molto più leggero per 16 sfere)
+
         const sphereGeom = new THREE.SphereGeometry(0.22, 32, 32); 
         const sphereMat = new THREE.MeshPhysicalMaterial({ color: 0xaaaaaa, metalness: 0.2, roughness: 0.4 });
         const sphereMatCenter = new THREE.MeshPhysicalMaterial({ color: 0xffdd00, metalness: 0.2, roughness: 0.4 });
@@ -1307,11 +1384,7 @@ controls.maxDistance = 150;
                 float uvX = (flowDir > 0.0) ? vUv.x : (1.0 - vUv.x);
                 float progress = fract(uvX - t); 
                 
-                // Punta bianca (transizione rapida alla fine)
                 float head = smoothstep(0.80, 1.0, progress);
-                
-                // Ombra della coda: ora scura al 50% (non più quasi nera)
-                // Questo mantiene la visibilità sul fondo grigio scuro
                 float shadow = smoothstep(0.0, 0.7, progress);
                 vec3 midColor = mix(color * 0.5, color, shadow);
                 
@@ -1336,11 +1409,9 @@ controls.maxDistance = 150;
             const isCollinear = normal.lengthSq() < 0.001;
 
             if (isCollinear) {
-                // FIX: Usa LineCurve3 per linee rette perfette ed evita artefatti grafici
                 isOpenCurve = true;
                 const d12 = p1.distanceTo(p2); const d23 = p2.distanceTo(p3); const d31 = p3.distanceTo(p1);
                 
-                // Crea una linea diretta tra i due estremi più lontani
                 if (d12 >= d23 && d12 >= d31) curve = new THREE.LineCurve3(p1, p2);
                 else if (d23 >= d12 && d23 >= d31) curve = new THREE.LineCurve3(p2, p3);
                 else curve = new THREE.LineCurve3(p3, p1);
@@ -1364,22 +1435,17 @@ controls.maxDistance = 150;
                 }
                 curve = new THREE.CatmullRomCurve3(points, true, 'catmullrom', 0.5);
             }
-            // OTTIMIZZAZIONE: Segmenti ridotti da 256->64 e raggio da 8->4. Risparmio memoria GPU enorme.
             const tubeGeom = new THREE.TubeGeometry(curve, 64, 0.035, 32, !isOpenCurve);
-            // MODIFICATO: Inizializza con opacity 1.0 (Solido)
+
             const material = new THREE.ShaderMaterial({
                 uniforms: { 
                     customTime: { value: 0 }, 
                     color: { value: new THREE.Color(colorHex) }, 
                     flowDir: { value: isCollinear ? -1.0 : 1.0 },
-                    opacity: { value: 0.5 } // Default 0.5
+                    opacity: { value: 0.5 }
                 },
                 vertexShader: flowVertexShader, 
                 fragmentShader: flowFragmentShader,
-                // CONFIGURAZIONE STABILE:
-                // transparent: true (sempre, per permettere lo slider)
-                // depthWrite: true (ABILITATO: Fondamentale per l'effetto 3D solido e l'occlusione corretta)
-                // blending: NormalBlending (resa "fisica" del colore, niente effetto neon additivo che falsava i colori)
                 transparent: true, 
                 depthWrite: true, 
                 depthTest: true, 
@@ -1392,7 +1458,6 @@ controls.maxDistance = 150;
 
             // HITBOX: Geometria super low-poly per il rilevamento mouse
             const hitGeom = new THREE.TubeGeometry(curve, 32, 0.25, 3, !isOpenCurve); 
-            // Materiale trasparente (opacity: 0)
             const hitMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false });
             const hitMesh = new THREE.Mesh(hitGeom, hitMat);
             scene.add(hitMesh);
@@ -1406,11 +1471,21 @@ controls.maxDistance = 150;
         const tripletButtons = [];
         const btnAlgToggle = document.getElementById('btn-alg-toggle');
         const sidebarAlgToggle = document.getElementById('sidebar-alg-toggle');
-        const sidebarAlgToggleTable = document.getElementById('sidebar-alg-toggle-table'); // Nuovo bottone tabella
+        const sidebarAlgToggleTable = document.getElementById('sidebar-alg-toggle-table');
         let currentAlgState = 15;
 
 	// --- FORMULA DEMO LOGIC ---
         window.runFormulaDemo = function(alg, expr, vars) {
+            // Chiude il menu formule se aperto
+            const fMenu = document.getElementById('calc-formula-menu');
+            if(fMenu) fMenu.classList.remove('visible');
+
+            // Chiude l'overlay dei divisori zero se è aperto
+            const zdOverlay = document.getElementById('zerodiv-overlay');
+            const zdBtn = document.getElementById('calc-zerodiv-btn');
+            if(zdOverlay) zdOverlay.classList.remove('visible');
+            if(zdBtn) zdBtn.classList.remove('active');
+
             // 1. Apri e Configura Calcolatrice
             openCalculator();
             calcAlgSelect.value = alg;
@@ -1429,7 +1504,7 @@ controls.maxDistance = 150;
             // 3. Imposta l'espressione e calcola
             const disp = document.getElementById('expression-display');
             disp.value = expr;
-            calcAction('eval'); // Esegue il calcolo
+            calcAction('eval');
         };
 
         function updateAlgebraState(forcedState) {
@@ -1476,8 +1551,6 @@ controls.maxDistance = 150;
                     // 4. Segmenti passanti per e8 (centro) -> Azzurri (Cyan)
                     newColorHex = 0x00ffff;
                 } else if (!t.isCollinear) {
-                    // Logica CERCHI (Curve):
-                    // Solo i 4 cerchi sulle facce (composti esclusivamente da punti medi) sono ROSA
                     const isFaceCircle = t.ids.every(id => MIDPOINTS.includes(id));
                     
                     if (isFaceCircle) {
@@ -1501,9 +1574,7 @@ controls.maxDistance = 150;
                     }
                 }
                 
-                // Applica il colore
                 t.mesh.material.uniforms.color.value.setHex(newColorHex);
-                // Aggiorna anche il bordo del bottone nella sidebar
                 if(tripletButtons[i]) tripletButtons[i].style.borderLeftColor = '#' + newColorHex.toString(16).padStart(6,'0');
             });
             if(typeof forceUpdate === 'function') forceUpdate();
@@ -1534,7 +1605,7 @@ controls.maxDistance = 150;
             tripletVisuals.forEach((t, i) => {
                 const isVisible = t.ids.every(val => val <= limitIndex);
                 t.mesh.visible = isVisible;
-                if(t.hitMesh) t.hitMesh.visible = isVisible; // Nascondi anche la hitbox
+                if(t.hitMesh) t.hitMesh.visible = isVisible;
                 if(tripletButtons[i]) tripletButtons[i].style.display = isVisible ? 'block' : 'none';
             });
             tableState.activeRow = null; tableState.activeCol = null;
@@ -1544,55 +1615,128 @@ controls.maxDistance = 150;
             // Gestione Visibilità Piani di Fano
             const fanoWrapper = document.getElementById('fano-container-wrapper');
             const fanoTableWrapper = document.getElementById('fano-table-wrapper');
+            const tableResizerRef = document.getElementById('table-resizer');
+            const tripletsResizerRef = document.getElementById('triplets-resizer');
             
+            // UPDATE: Nascondi sempre il pulsante Divisori Zero nella sidebar
+            zdBtn.style.display = 'none';
             if(limitIndex < 15) {
-                zdBtn.style.display = 'none';
-                fanoWrapper.style.display = 'none'; 
-                fanoTableWrapper.style.display = 'none'; // Nascondi nella tabella
+                fanoWrapper.style.display = 'none';
+                fanoTableWrapper.style.display = 'none';
+                if(tableResizerRef) tableResizerRef.style.display = 'none';
+                if(tripletsResizerRef) tripletsResizerRef.style.display = 'none';
                 if(zdBtn.classList.contains('active')) document.getElementById('tab-btn-triplets').click();
             } else {
-                zdBtn.style.display = 'block';
-                fanoWrapper.style.display = 'block'; 
-                fanoTableWrapper.style.display = 'block'; // Mostra nella tabella
+                // zdBtn.style.display = 'block';
+                // RIMOSSO: Non mostrare mai
+                fanoWrapper.style.display = 'block';
+                fanoTableWrapper.style.display = 'block';
+                if(tableResizerRef) tableResizerRef.style.display = 'flex';
+                if(tripletsResizerRef) tripletsResizerRef.style.display = 'flex';
             }
 
-            // --- INIEZIONE FORMULE ---
-            const fContainer = document.getElementById('formula-container');
-            fContainer.innerHTML = '';
-            
-            if (limitIndex === 3) { // Quaternioni
-                fContainer.innerHTML = `
-                    <div class="formula-group-title">In generale:</div>
-                    <button class="formula-btn" onclick="runFormulaDemo(3, '[a,b]', ['a','b'])">
-                        [a,b] = a*b - b*a &ne; 0
-                    </button>
-                `;
-            } else if (limitIndex === 7) { // Ottetti
-                fContainer.innerHTML = `
-                    <div class="formula-group-title">In generale:</div>
-                    <button class="formula-btn" onclick="runFormulaDemo(7, '[a,b,c]', ['a','b','c'])">
-                        [a,b,c] = (a*b)*c - a*(b*c) &ne; 0
-                    </button>
-                `;
-            } else if (limitIndex === 15) { // Sedenioni
-                fContainer.innerHTML = `
-                    <div class="formula-group-title">In generale:</div>
-                    <button class="formula-btn" onclick="runFormulaDemo(15, '[a,a,b]', ['a','b'])">
-                        [a,a,b] = (a*a)*b - a*(a*b) &ne; 0
-                    </button>
-                    <button class="formula-btn" onclick="runFormulaDemo(15, '[b,a,a]', ['a','b'])">
-                        [b,a,a] = (b*a)*a - b*(a*a) &ne; 0
-                    </button>
-                    <div class="formula-group-title" style="margin-top:10px;">Ma (Flessibilità):</div>
-                    <button class="formula-btn" onclick="runFormulaDemo(15, '[a,b,a]', ['a','b'])">
-                        [a,b,a] = (a*b)*a - a*(b*a) = 0
-                    </button>
-                `;
+            // --- INIEZIONE FORMULE & DIVISORI ZERO ---
+            const fContainer = document.getElementById('calc-formula-menu');
+            const zdBtnCalc = document.getElementById('calc-zerodiv-btn');
+            const zdOverlay = document.getElementById('zerodiv-overlay');
+            const zdContentGrid = document.getElementById('zerodiv-content-grid');
+
+            // Gestione Visibilità Bottone a*b=0 (Solo Sedenioni)
+            if (zdBtnCalc && zdContentGrid) {
+                if (limitIndex === 15) {
+                    zdBtnCalc.style.display = 'block';
+                    zdContentGrid.innerHTML = ''; // Pulisci griglia
+                    
+                    // Genera lista nella griglia overlay
+                    ZERO_DIVISORS_RAW.forEach((zd, idx) => {
+                        const sign1 = zd[2] < 0 ? "-" : ""; const sign2 = zd[3] < 0 ? "-" : "+";
+                        // Format HTML lineare identico alla Sidebar
+                        const txt = `(e<sub>${zd[0]}</sub>+e<sub>${zd[1]}</sub>)(${sign1}e<sub>${Math.abs(zd[2])}</sub>${sign2}e<sub>${Math.abs(zd[3])}</sub>)`;
+                        
+                        const btn = document.createElement('div');
+                        btn.className = 'zerodiv-grid-btn';
+                        btn.innerHTML = txt;
+                        
+                        btn.onclick = (e) => {
+                            e.stopPropagation();
+                            zdOverlay.classList.remove('visible'); // Chiudi overlay
+                            zdBtnCalc.classList.remove('active');
+                            
+                            // Logica caricamento (simile al sidebar)
+                            openCalculator();
+                            
+                            // Imposta A
+                            saveVar(currentVar); switchVar('a'); 
+                            let vA = createZeroVector();
+                            vA[zd[0]] = 1; vA[zd[1]] = 1;
+                            setGrid(vA); saveVar('a');
+                            
+                            // Imposta B
+                            switchVar('b'); 
+                            let vB = createZeroVector();
+                            vB[Math.abs(zd[2])] = Math.sign(zd[2]); 
+                            vB[Math.abs(zd[3])] = Math.sign(zd[3]);
+                            setGrid(vB); saveVar('b');
+                            
+                            // Calcola
+                            document.getElementById('expression-display').value = 'a * b';
+                            calcAction('eval');
+                            
+                            // Visualizza 3D (Opzionale: resetta vista e mostra punti)
+                            resetView();
+                            [Math.abs(zd[0]), Math.abs(zd[1]), Math.abs(zd[2]), Math.abs(zd[3])].forEach(id => {
+                                if(pointObjects[id]) { pointObjects[id].mesh.visible = true; pointObjects[id].label.visible = true; }
+                            });
+                        };
+                        zdContentGrid.appendChild(btn); // CORRETTO: Usa zdContentGrid
+                    });
+
+                } else {
+                    zdBtnCalc.style.display = 'none';
+                    zdContentGrid.innerHTML = ''; // CORRETTO: Usa zdContentGrid
+                }
+            }
+
+            if(fContainer) {
+                fContainer.innerHTML = '';
+                
+                if (limitIndex === 3) { // Quaternioni
+                    fContainer.innerHTML = `
+                        <div class="formula-group-title">Formule Quaternioni:</div>
+                        <button class="formula-btn" onclick="runFormulaDemo(3, '[a,b]', ['a','b'])">
+                            [a,b] = a*b - b*a &ne; 0
+                        </button>
+                    `;
+                } else if (limitIndex === 7) { // Ottetti
+                    fContainer.innerHTML = `
+                        <div class="formula-group-title">Formule Ottetti:</div>
+                        <button class="formula-btn" onclick="runFormulaDemo(7, '[a,b,c]', ['a','b','c'])">
+                            [a,b,c] = (a*b)*c - a*(b*c) &ne; 0
+                        </button>
+                    `;
+                } else if (limitIndex === 15) { // Sedenioni
+                    fContainer.innerHTML = `
+                        <div class="formula-group-title">Alternatività:</div>
+                        <button class="formula-btn" onclick="runFormulaDemo(15, '[a,a,b]', ['a','b'])">
+                            [a,a,b] = (a*a)*b - a*(a*b) &ne; 0
+                        </button>
+                        <button class="formula-btn" onclick="runFormulaDemo(15, '[b,a,a]', ['a','b'])">
+                            [b,a,a] = (b*a)*a - b*(a*a) &ne; 0
+                        </button>
+                        <div class="formula-group-title" style="margin-top:10px;">Flessibilità (Zero):</div>
+                        <button class="formula-btn" onclick="runFormulaDemo(15, '[a,b,a]', ['a','b'])">
+                            [a,b,a] = (a*b)*a - a*(b*a) = 0
+                        </button>
+                    `;
+                }
             }
         }
 
         const settingsToggle = document.getElementById('settings-toggle-btn');
+
         const settingsMenu = document.getElementById('settings-menu');
+        
+        // --- GESTIONE MENU PRINCIPALE ---
         settingsToggle.addEventListener('click', (e) => {
             e.stopPropagation();
             settingsMenu.classList.toggle('visible');
@@ -1604,6 +1748,48 @@ controls.maxDistance = 150;
                 settingsToggle.classList.remove('active');
             }
         });
+
+        // --- GESTIONE MENU FORMULE E DIVISORI CALCOLATRICE ---
+        const formulasBtn = document.getElementById('calc-formulas-btn');
+        const formulasMenu = document.getElementById('calc-formula-menu');
+        const zdBtnCalc = document.getElementById('calc-zerodiv-btn');
+        // NOTA: zdMenuCalc rimosso, usiamo il nuovo overlay
+        const zdOverlay = document.getElementById('zerodiv-overlay');
+        const zdContentGrid = document.getElementById('zerodiv-content-grid');
+        const zdCloseOverlay = document.getElementById('close-zerodiv-overlay');
+        
+        // Setup Formule (Dropdown classico)
+        if(formulasBtn && formulasMenu) {
+            formulasBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                formulasMenu.classList.toggle('visible');
+            });
+            document.addEventListener('click', (e) => {
+                if(formulasMenu.classList.contains('visible')) {
+                    if (!formulasMenu.contains(e.target) && e.target !== formulasBtn) {
+                        formulasMenu.classList.remove('visible');
+                    }
+                }
+            });
+        }
+
+        // Setup Divisori Zero (Overlay Full)
+        if(zdBtnCalc && zdOverlay) {
+            zdBtnCalc.addEventListener('click', () => {
+                // Chiude menu formule se aperto
+                if(formulasMenu) formulasMenu.classList.remove('visible');
+                // Toggle Overlay
+                zdOverlay.classList.toggle('visible');
+                zdBtnCalc.classList.toggle('active'); // Stato attivo pulsante
+            });
+            
+            if(zdCloseOverlay) {
+                zdCloseOverlay.addEventListener('click', () => {
+                    zdOverlay.classList.remove('visible');
+                    zdBtnCalc.classList.remove('active');
+                });
+            }
+        }
 
         const speedLabel = document.getElementById('speed-val');
         document.getElementById('speed-slider').addEventListener('input', (e) => {
@@ -1617,8 +1803,6 @@ controls.maxDistance = 150;
             const val = parseFloat(e.target.value);
             if(opacityLabel) opacityLabel.innerText = val.toFixed(2);
 
-            // Aggiorna solo il valore numerico nello shader.
-            // Nessun cambio di blending o depthWrite = NESSUN SALTO.
             animatedMaterials.forEach(mat => {
                 mat.uniforms.opacity.value = val;
                 mat.needsUpdate = true;
@@ -1651,71 +1835,99 @@ controls.maxDistance = 150;
 
         playBtn.addEventListener('click', () => {
             animParams.paused = !animParams.paused;
-            // Scambia l'icona interna invece del testo
             playBtn.innerHTML = animParams.paused ? iconPlay : iconPause;
-            // Se riprendiamo, forza il render loop
             if(!animParams.paused && typeof forceUpdate === 'function') forceUpdate();
         });
         
+        // --- LOGICA SFONDI E GRIGLIA ---
         let currentTheme = 0;
-        const themeNames = ["Default", "Deep Space", "Studio Light", "Griglia Tecnica", "Stellato"];
+        const themeNames = ["Slate Mist", "Cyber Gradient", "Blueprint", "Stellato", "Dark Default"];
         const themeBtn = document.getElementById('theme-btn');
         const themeLabel = document.getElementById('theme-label');
         
-        const gridHelper = new THREE.GridHelper(60, 30, 0x444444, 0x111111); gridHelper.visible = false; gridHelper.position.y = -8; scene.add(gridHelper);
+        // Griglia Globale (inizialmente spenta)
+        const gridHelper = new THREE.GridHelper(60, 30, 0x555555, 0x222222); 
+        gridHelper.visible = false; 
+        gridHelper.position.y = -8; 
+        scene.add(gridHelper);
+
+        // Pulsante Toggle Griglia
+        const gridToggleBtn = document.getElementById('grid-toggle-btn');
+        const gridLabel = document.getElementById('grid-label');
+        
+        gridToggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            gridHelper.visible = !gridHelper.visible;
+            gridLabel.innerText = gridHelper.visible ? "Griglia: ON" : "Griglia: OFF";
+            gridToggleBtn.style.borderColor = gridHelper.visible ? '#00aaff' : '#444';
+            gridToggleBtn.style.color = gridHelper.visible ? 'white' : '#eee';
+            if(typeof forceUpdate === 'function') forceUpdate();
+        });
+
+        // Campo Stellato
         const starsCount = 1000; const starsGeo = new THREE.BufferGeometry(); const starsPos = new Float32Array(starsCount*3);
         for(let i=0; i<starsCount*3; i++) starsPos[i] = (Math.random()-0.5)*100;
         starsGeo.setAttribute('position', new THREE.BufferAttribute(starsPos,3));
-        const starField = new THREE.Points(starsGeo, new THREE.PointsMaterial({size:0.15, color:0xffffff})); starField.visible=false; scene.add(starField);
+        const starField = new THREE.Points(starsGeo, new THREE.PointsMaterial({size:0.15, color:0xffffff})); 
+        starField.visible = false; 
+        scene.add(starField);
 
-        themeBtn.addEventListener('click', () => {
+        themeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
             currentTheme = (currentTheme + 1) % 5;
-            
-            // Aggiorna l'etichetta del pulsante
             themeLabel.innerText = "Sfondo: " + themeNames[currentTheme];
 
-            scene.background = null; gridHelper.visible = false; starField.visible = false; 
-            container.className = ''; scene.fog = null;
+            // Reset proprietà base (MA NON TOCCA gridHelper.visible)
+            scene.background = null; 
+            starField.visible = false; 
+            container.className = ''; 
+            scene.fog = null;
             container.style.background = ''; 
+            
+            // Rimuovi eventuali griglie extra vecchie se presenti (pulizia)
+            scene.children.forEach(c => { if(c.isGridHelper && c !== gridHelper) scene.remove(c); });
 
             if(currentTheme === 0) { 
-                const col = 0x303030;
+                // Slate Mist
+                const col = 0x2b3a42;
                 scene.background = new THREE.Color(col);
                 container.style.backgroundColor = '#' + col.toString(16);
+                scene.fog = new THREE.Fog(col, 10, 60); 
             }
             else if(currentTheme === 1) { 
+                // Cyber Gradient
                 container.classList.add('bg-deep-space'); 
-                scene.fog = new THREE.FogExp2(0x101020, 0.015); 
+                scene.fog = new THREE.FogExp2(0x24243e, 0.02); 
             }
             else if(currentTheme === 2) { 
-                container.classList.add('bg-studio'); 
+                // Blueprint (Sostituto del Bianco)
+                const col = 0x001a33;
+                scene.background = new THREE.Color(col); 
+                container.classList.add('bg-studio'); // Usa la classe CSS aggiornata
             }
             else if(currentTheme === 3) { 
-                const col = 0x303030;
-                scene.background = new THREE.Color(col); 
-                gridHelper.visible = true; 
-                container.style.backgroundColor = '#' + col.toString(16);
-            }
-            else if(currentTheme === 4) { 
+                // Stellato
                 const col = 0x0a0a14;
                 scene.background = new THREE.Color(col); 
                 starField.visible = true; 
                 container.style.backgroundColor = '#' + col.toString(16).padStart(6, '0');
             }
+            else if(currentTheme === 4) { 
+                // Dark Default
+                const col = 0x111111;
+                scene.background = new THREE.Color(col);
+                container.style.backgroundColor = '#' + col.toString(16);
+            }
             
-            // Forza render dopo il cambio tema (per la versione ottimizzata)
             if(typeof forceUpdate === 'function') forceUpdate();
         });
 
-        // Sidebar
-        // Sidebar & Resizer
         const sidebar = document.getElementById('sidebar');
         const sidebarToggle = document.getElementById('sidebar-toggle-btn');
         const sidebarClose = document.getElementById('close-sidebar-btn');
         const resizer = document.getElementById('sidebar-resizer');
 
         function toggleSidebar() {
-            // Reset larghezza manuale per permettere l'animazione CSS standard
             sidebar.style.width = ''; 
             sidebar.classList.toggle('open');
             sidebarToggle.classList.toggle('active');
@@ -1728,12 +1940,22 @@ controls.maxDistance = 150;
 
         sidebarToggle.addEventListener('click', toggleSidebar);
         sidebarClose.addEventListener('click', () => { 
+            // FIX DEFINITIVO GHOSTING: Nasconde visivamente il contenuto PRIMA dell'animazione
+            const content = sidebar.querySelectorAll('.sidebar-tabs, .tab-content');
+            content.forEach(el => el.style.visibility = 'hidden');
+
+            // Taglia eventuali sbavature
+            sidebar.style.overflow = 'hidden';
+
             sidebar.classList.remove('open'); 
             sidebarToggle.classList.remove('active'); 
-            sidebar.style.width = ''; // Reset
+            sidebar.style.width = '';
 
-            // FIX: Forza il ricalcolo delle dimensioni 3D dopo l'animazione di chiusura
             setTimeout(() => {
+                // Ripristina visibilità e overflow per il prossimo utilizzo
+                content.forEach(el => el.style.visibility = '');
+                sidebar.style.overflow = ''; 
+
                 const w = container.clientWidth; const h = container.clientHeight;
                 camera.aspect = w / h; camera.updateProjectionMatrix(); 
                 renderer.setSize(w, h); labelRenderer.setSize(w, h);
@@ -1756,7 +1978,7 @@ controls.maxDistance = 150;
             if (!isResizing) return;
             const newWidth = window.innerWidth - clientX;
             
-            if (newWidth < 50) { // Soglia ridotta per mobile
+            if (newWidth < 50) {
                 sidebar.style.width = '0px';
             } else {
                 sidebar.style.width = newWidth + 'px';
@@ -1766,8 +1988,6 @@ controls.maxDistance = 150;
                 }
             }
 
-            // FIX: Aggiorna il Canvas 3D e la Camera in tempo reale durante il trascinamento
-            // Questo elimina l'effetto "ombra" o ritardo visivo
             const w = container.clientWidth; 
             const h = container.clientHeight;
             camera.aspect = w / h; 
@@ -1803,11 +2023,11 @@ controls.maxDistance = 150;
         // Touch Events (Nuovi)
         resizer.addEventListener('touchstart', (e) => {
             startResize(e);
-            e.preventDefault(); // Previene lo scroll della pagina mentre afferri
+            e.preventDefault();
         }, {passive: false});
 
         document.addEventListener('touchmove', (e) => {
-            if(isResizing) e.preventDefault(); // Previene scroll pagina
+            if(isResizing) e.preventDefault();
             doResize(e.touches[0].clientX);
         }, {passive: false});
 
@@ -1854,12 +2074,10 @@ controls.maxDistance = 150;
 
             // 5. Mostra solo le terne attive e i loro punti
             activeIndices.forEach(i => {
-                // Mostra la curva/linea
                 const tObj = tripletVisuals[i];
                 tObj.mesh.visible = true;
                 if(tObj.hitMesh) tObj.hitMesh.visible = true;
 
-                // Mostra i punti appartenenti a questa terna
                 const tripletIds = POSITIVE_TRIPLETS[i];
                 tripletIds.forEach(pId => {
                     if(pointObjects[pId]) {
@@ -1877,7 +2095,6 @@ controls.maxDistance = 150;
             btn.innerText = `{${triplet[0]}, ${triplet[1]}, ${triplet[2]}}`;
             const hex = tripletVisuals[idx].color.toString(16).padStart(6,'0');
             btn.style.borderLeft = `4px solid #${hex}`;
-            // FIX: Aggiunto l'evento click mancante
             btn.addEventListener('click', () => visualizeTripletByIndex(idx)); 
             buttonsContainer.appendChild(btn);
             tripletButtons.push(btn);
@@ -1902,17 +2119,17 @@ controls.maxDistance = 150;
             if(fanoButtons[planeIdx]) fanoButtons[planeIdx].classList.add('active');
             if(tableFanoBtns[planeIdx]) tableFanoBtns[planeIdx].classList.add('active');
 
-            // --- NUOVO: EVIDENZIAZIONE TABELLA PRODOTTO ---
+            // --- EVIDENZIAZIONE TABELLA PRODOTTO ---
             const table = document.getElementById('sedenion-table');
             // Rimuovi evidenziazioni precedenti
             table.querySelectorAll('td').forEach(td => {
                 td.classList.remove('fano-selected', 'fano-dimmed');
-                td.style.opacity = ''; // Reset inline styles se presenti
+                td.style.opacity = '';
             });
 
             // Ottieni gli indici coinvolti nel piano (appiattisci e rendi unici)
             const indices = [...new Set(FANO_PLANES[planeIdx].flat())];
-            indices.push(0); // Includiamo l'identità (indice 0 / "1") che fa parte della subalgebra
+            indices.push(0);
 
             const limit = parseInt(document.getElementById('calc-alg-select').value) || 15;
             
@@ -1962,8 +2179,6 @@ controls.maxDistance = 150;
             forceUpdate();
         }
 
-        // Generazione pulsanti Fano
-        // Mappatura colori richiesta: Griglia 3x5
         const fanoColors = [
             '#ff4444', '#4488ff', '#ffdd00', // Riga 1: Rosso, Blu, Giallo
             '#00cc44', '#ffdd00', '#00cc44', // Riga 2: Verde, Giallo, Verde
@@ -1992,11 +2207,9 @@ controls.maxDistance = 150;
             fanoGrid.appendChild(btn);
             fanoButtons.push(btn);
 
-            // --- NUOVO: Crea bottone duplicato per la scheda TABELLA ---
             const btnTable = btn.cloneNode(true);
             btnTable.addEventListener('click', () => visualizeFanoPlane(idx));
             document.getElementById('fano-grid-table').appendChild(btnTable);
-            // Teniamo traccia anche di questi bottoni per lo stile active
             btnTable.dataset.fanoIdx = idx; 
         });
 
@@ -2021,7 +2234,7 @@ controls.maxDistance = 150;
         document.getElementById('show-all-table-btn').addEventListener('click', resetView);
 
         const zdContainer = document.getElementById('zerodiv-grid');
-        const zdButtons = []; // Array per gestire lo stato attivo dei bottoni
+        const zdButtons = [];
 
         ZERO_DIVISORS_RAW.forEach((zd, idx) => {
             const btn = document.createElement('div');
@@ -2047,10 +2260,8 @@ controls.maxDistance = 150;
                 calcAction('eval');
 
                 // 2. NUOVA Logica Visualizzazione 3D
-                // Reset visuale
                 resetView(); 
                 
-                // Mostra i punti coinvolti (senza geometria rossa)
                 const indices = [Math.abs(zd[0]), Math.abs(zd[1]), Math.abs(zd[2]), Math.abs(zd[3])];
                 indices.forEach(id => {
                     if(pointObjects[id]) {
@@ -2059,9 +2270,8 @@ controls.maxDistance = 150;
                     }
                 });
                 
-                // Feedback UI sul bottone
-                zdButtons.forEach(b => b.style.borderColor = '#442222'); // Reset stile
-                btn.style.borderColor = '#ff4444'; // Attivo
+                zdButtons.forEach(b => b.style.borderColor = '#442222');
+                btn.style.borderColor = '#ff4444';
                 
                 forceUpdate();
             });
@@ -2098,9 +2308,7 @@ controls.maxDistance = 150;
         helpModal.addEventListener('click', (e) => { if(e.target === helpModal) helpModal.classList.remove('visible'); });
 
 
-        // =============================================================
         // ===================== ADVANCED CALCULATOR ===================
-        // =============================================================
 
         const calcModal = document.getElementById('calc-modal');
         const calcToggle = document.getElementById('calc-toggle-btn');
@@ -2210,7 +2418,7 @@ function validateAssociativity(exprStr) {
             let level = 0;
             let chain = []; 
             let lastWasOperand = false; 
-            let pendingInverse = false; // Flag per tracciare la divisione
+            let pendingInverse = false;
 
             for(let i=0; i<tokens.length; i++) {
                 let t = tokens[i];
@@ -2219,55 +2427,36 @@ function validateAssociativity(exprStr) {
                 if(t === '(') {
                     level++;
                     lastWasOperand = false;
-                    // Entrando in un gruppo, la logica interna è isolata.
-                    // Non resettiamo 'chain' qui, perché il gruppo stesso diventerà un operando per 'chain'.
-                    // Ma dobbiamo assicurarci di non contare ciò che c'è dentro per la catena esterna.
-                    // Soluzione: usiamo uno stack o, più semplicemente per questa validazione:
-                    // Ignoriamo tutto finché non torniamo al livello 0.
                 }
                 else if(t === ')') {
                     level--;
                     if(level === 0) {
-                        // Siamo usciti da una parentesi/funzione.
-                        // Consideriamo tutto il blocco (...) come un UNICO operando generico.
-                        // Usiamo un oggetto vuoto {} che è unico ({} !== {}), così (a)*b*(c) non sembrerà a*b*a.
                         chain.push({}); 
                         lastWasOperand = true;
                     }
                 }
-                // --- GESTIONE LIVELLO 0 (Catena Principale) ---
                 else if(level === 0) {
-                    // Ignoriamo i nomi delle funzioni (inv, conj), aspettiamo la parentesi aperta
                     if(['norm','conj','inv','comm'].includes(t)) {
                         lastWasOperand = false;
                         continue;
                     }
 
-                    // Operatori che resettano la catena (Somma, Virgola)
-                    // Ma SOLO se sono binari! (cioè se c'era un operando prima)
                     if(t === '+' || t === '-' || t === ',') {
                         if (lastWasOperand) {
-                            // Operatore Binario (Sottrazione/Addizione) -> Spezza la catena
                             chain = [];
                             lastWasOperand = false;
                         } else {
-                            // Operatore Unario (es. -a, +e_1) -> NON spezza la catena, lo ignoriamo
                         }
                     } 
-                    // Operatori che continuano la catena (Moltiplicazione, Divisione)
                     else if(t === '*' || t === '/') {
-                        // Se è una divisione, il prossimo operando sarà un inverso
                         if (t === '/') pendingInverse = true;
                         else pendingInverse = false;
                         
                         lastWasOperand = false;
                         continue;
                     }
-                    // Operandi (Variabili, Numeri, e_n)
                     else {
                         if(!isScalar(t)) {
-                            // Se c'era una divisione pendente, modifichiamo il nome dell'operando nella catena
-                            // Così 'b' diventa 'inv(b)', impedendo al validatore di considerarli uguali (A===C)
                             if (pendingInverse) {
                                 chain.push("inv(" + (typeof t === 'string' ? t : 'Expr') + ")");
                                 pendingInverse = false;
@@ -2277,17 +2466,12 @@ function validateAssociativity(exprStr) {
                         }
                         lastWasOperand = true;
 
-                        // --- 0. ECCEZIONE MONO-ASSOCIATIVITÀ (Potenze e Operazioni sullo stesso elemento) ---
-                        // Permette a*a, a/a, a*a/a anche se ci sono inv() o conj() di mezzo.
-                        // Estrae il nome base della variabile ignorando le funzioni unarie
                         const getBase = (v) => {
                             if (typeof v !== 'string') return v; 
-                            // Rimuove inv(...), conj(...) per controllare se l'elemento è lo stesso
                             return v.replace(/^(inv|conj|norm)\((.*)\)$/, '$2');
                         };
 
                         const base0 = getBase(chain[0]);
-                        // Controlla se tutti gli elementi della catena derivano dalla stessa variabile base
                         const isMono = chain.every(val => (typeof val === 'string') && getBase(val) === base0);
                         
                         if (isMono && chain.length > 0) continue;
@@ -2300,11 +2484,7 @@ function validateAssociativity(exprStr) {
                         // --- 2. CONTROLLO TERNE ---
                         if(chain.length === 3) {
                             const [A, B, C] = chain;
-                            let isValid = false;
-
-                            // Nota: A, B, C possono essere stringhe ('a') o oggetti ({} derivanti da gruppi)
-                            // L'uguaglianza A===C funziona solo se sono stringhe identiche.
-                            
+                            let isValid = false;                          
                             if (alg === 7) { // Ottetti
                                 if (A === B || B === C || A === C) isValid = true;
                             }
@@ -2313,7 +2493,6 @@ function validateAssociativity(exprStr) {
                             }
 
                             if (!isValid) {
-                                // Se ci sono gruppi coinvolti, il messaggio è generico
                                 const pA = (typeof A==='object') ? '(..)' : A;
                                 const pB = (typeof B==='object') ? '(..)' : B;
                                 const pC = (typeof C==='object') ? '(..)' : C;
@@ -2340,8 +2519,6 @@ function validateAssociativity(exprStr) {
                     if(bracketDepth > 0) bracketDepth--;
                     processedStr += char;
                 } else if(char === ',') {
-                    // Se siamo dentro parentesi quadre (depth > 0), è un separatore di argomenti.
-                    // Altrimenti (depth 0), è un punto decimale (es. 1,2 -> 1.2).
                     if(bracketDepth > 0) processedStr += ',';
                     else processedStr += '.';
                 } else {
@@ -2354,99 +2531,8 @@ function validateAssociativity(exprStr) {
             // Il motore gestirà automaticamente la differenza tra comm2 e comm3.
             exprStr = processedStr.replace(/\[/g, 'comm(').replace(/\]/g, ')');
 
-            // Tokenizer modificato per includere "e_"
-            let tokens = exprStr.replace(/\s+/g, '').split(/([+\-*/(),]|norm|conj|inv|comm|e_\()/).filter(t => t);
-            
-            // Unary Minus Detection: if '-' is at start or follows operator/paren, change to '~'
-            for(let i=0; i<tokens.length; i++) {
-                if(tokens[i] === '-') {
-                    const prev = i > 0 ? tokens[i-1] : null;
-                    const isUnary = (i === 0) || (['+','-','*','/','(','comm',','].includes(prev));
-                    if(isUnary) tokens[i] = '~';
-                }
-            }
-
-            const outputQueue = [];
-            const opStack = [];
-            
-            // Extended Shunting-Yard
-            for(let i=0; i<tokens.length; i++) {
-                const token = tokens[i];
-                if (storedVars[token] || token.startsWith('Ans') || !isNaN(parseFloat(token))) { 
-                    outputQueue.push(token); 
-                } else if (ops[token] && (ops[token].type === 'func' || ops[token].type === 'func_var')) {
-                    opStack.push(token);
-                } else if (token === ',') {
-                     // Separator: pop until '('
-                    while (opStack.length > 0 && opStack[opStack.length-1] !== '(') {
-                        outputQueue.push(opStack.pop());
-                    }
-                } else if (ops[token]) { 
-                    while (opStack.length > 0) {
-                        const top = opStack[opStack.length-1];
-                        if (top === '(') break;
-                        if ((ops[token].assoc === 'L' && ops[token].prec <= ops[top].prec) ||
-                            (ops[token].assoc === 'R' && ops[token].prec < ops[top].prec)) {
-                            outputQueue.push(opStack.pop());
-                        } else { break; }
-                    }
-                    opStack.push(token);
-                } else if (token === '(') {
-                    opStack.push(token);
-                } else if (token === ')') {
-                    let commaCount = 0;
-                    // Pop loop to find matching paren
-                    while (opStack.length > 0 && opStack[opStack.length-1] !== '(') {
-                        outputQueue.push(opStack.pop());
-                    }
-                    opStack.pop(); // Remove '('
-
-                    // Check if function preceding '('
-                    const prevOp = opStack.length > 0 ? opStack[opStack.length-1] : null;
-                    if (prevOp && ops[prevOp] && ops[prevOp].type === 'func_var') {
-                        // We found a variable function (comm).
-                        // We need to know how many args. 
-                        // Simplified: Count commas inside the parenthesis scope.
-                        // Since standard Shunting Yard doesn't track args easily, 
-                        // we scan original tokens inside the parens we just closed?
-                        // Hack: Count how many arguments were pushed to output queue? No.
-                        
-                        // Robust method: Count commas in the source string corresponding to this function call? 
-                        // Or imply arg count from the output stack logic?
-                        // Let's use a simpler heuristic for this calculator:
-                        // Count commas in the token stream between the matching parens.
-                        
-                        // Let's re-scan tokens backward? No.
-                        // Let's modify the comma handling. 
-                        // When ',' is hit, we verify the function at top-1 of stack (under '(').
-                        // Let's attach argCount to the stack object.
-                    }
-                    
-                    // Actually, simpler approach for `comm`:
-                    // Just look at the stack. If it's `comm`, we replace it with `comm2` or `comm3`.
-                    // But RPN queue is linear.
-                    // Let's do this: When evaluating RPN, if we see `comm`, we don't know if it's 2 or 3.
-                    // Solution: Convert `comm` to `comm2` or `comm3` DURING tokenization or parsing.
-                    
-                    // Let's count commas in the current scope.
-                    // Finding the scope in `tokens`: find matching `)` for the `(` after `comm`.
-                }
-            }
-            while (opStack.length > 0) outputQueue.push(opStack.pop());
-
-            // FIX: The above logic for `comm` is incomplete. 
-            // Better strategy: Use a recursive evaluator or count args explicitly.
-            // Since we can't easily rewrite the whole parser, let's fix `comm` handling by pre-processing.
-            // Replace `comm(a,b,c)` with `comm3(a,b,c)` and `comm(a,b)` with `comm2(a,b)`.
-            // Regex is hard with nested parens.
-            
-            // Let's do a quick pass to rename `comm`.
-            let level = 0;
-            let commScopes = []; // { start: index of 'comm', args: 1 }
-            
-            // Reset tokens for clarity (FIX: Includi e_ nello split per coerenza)
             const rawTokens = exprStr.replace(/\s+/g, '').split(/([+\-*/(),]|norm|conj|inv|comm|e_)/).filter(t => t);
-            tokens = []; // Ricostruiamo l'array pulito
+            let tokens = [];
             
             // Gestione Unary Plus (+) e Unary Minus (-)
             for(let i=0; i<rawTokens.length; i++) {
@@ -2456,10 +2542,9 @@ function validateAssociativity(exprStr) {
                     const isUnary = (i === 0) || (['+','-','*','/','(','comm',','].includes(prev));
                     
                     if(isUnary) {
-                        if(token === '-') tokens.push('~'); // Il meno unario diventa tilde
-                        // Il più unario (+) lo ignoriamo (non lo aggiungiamo), perché +3 è uguale a 3
+                        if(token === '-') tokens.push('~');
                     } else {
-                        tokens.push(token); // Operatore binario, lo teniamo
+                        tokens.push(token);
                     }
                 } else {
                     tokens.push(token);
@@ -2469,15 +2554,13 @@ function validateAssociativity(exprStr) {
             // Identify comm arity
             for(let i=0; i<tokens.length; i++) {
                 if(tokens[i] === 'comm') {
-                    // Look ahead for (
-                    // We need to find corresponding closing paren and count commas at this level.
                     let localLevel = 0;
                     let commCount = 0;
                     for(let j=i+1; j<tokens.length; j++) {
                         if(tokens[j] === '(') localLevel++;
                         else if(tokens[j] === ')') {
                             localLevel--;
-                            if(localLevel === 0) break; // End of comm args
+                            if(localLevel === 0) break;
                         }
                         else if(tokens[j] === ',' && localLevel === 1) {
                             commCount++;
@@ -2519,7 +2602,6 @@ function validateAssociativity(exprStr) {
                          finalQueue.push(finalStack.pop());
                      }
                      finalStack.pop(); 
-                     // FIX: Verifica che l'elemento esista in ops prima di leggere .type (evita crash su parentesi annidate)
                      const topToken = finalStack[finalStack.length-1];
                      if (finalStack.length > 0 && ops[topToken] && ops[topToken].type === 'func') {
                          finalQueue.push(finalStack.pop());
@@ -2567,7 +2649,6 @@ function validateAssociativity(exprStr) {
                             evalStack.push(ops[token].fn(a));
                         }
                     } else {
-                        // Binary ops
                         const b = getV(evalStack.pop());
                         const a = getV(evalStack.pop());
                         if(!a || !b) throw "Errore Sintassi";
@@ -2594,10 +2675,8 @@ function validateAssociativity(exprStr) {
             }
 
             // OPTIMIZATION: Event Delegation (Un solo listener invece di 16)
-            // Controlla se abbiamo già attaccato l'evento per evitare duplicati
             if (!inputGrid.hasAttribute('data-listener-attached')) {
                 inputGrid.addEventListener('keydown', (e) => {
-                    // Agisce solo se il target è un input numerico
                     if (!e.target.classList.contains('num-input')) return;
 
                     const idx = parseInt(e.target.dataset.idx);
@@ -2722,9 +2801,6 @@ window.calcBracket = function() {
 
         window.calcInput = function(val) { 
             const input = document.getElementById('expression-display');
-            
-            // Se l'input non ha il focus, aggiungi alla fine (comportamento fallback)
-            // Ma se l'utente ha cliccato, useremo la posizione del cursore
             if (document.activeElement !== input) {
                 input.focus();
             }
@@ -2732,11 +2808,7 @@ window.calcBracket = function() {
             const start = input.selectionStart;
             const end = input.selectionEnd;
             const text = input.value;
-
-            // Inserisci il testo nella posizione del cursore o sostituisci la selezione
             input.value = text.substring(0, start) + val + text.substring(end);
-
-            // Sposta il cursore subito dopo il testo inserito
             const newPos = start + val.length;
             input.setSelectionRange(newPos, newPos);
         };
@@ -2770,11 +2842,9 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
                 const text = disp.value;
 
                 if (start !== end) {
-                    // Se c'è del testo selezionato, lo cancella
                     disp.value = text.substring(0, start) + text.substring(end);
                     disp.setSelectionRange(start, start);
                 } else if (start > 0) {
-                    // Altrimenti cancella il carattere PRIMA del cursore
                     disp.value = text.substring(0, start - 1) + text.substring(end);
                     disp.setSelectionRange(start - 1, start - 1);
                 }
@@ -2787,20 +2857,9 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
                 try {
                     // --- 0. PRE-PROCESSING (Moltiplicazione Implicita) ---
                     let val = disp.value;
-                    
-                    // Supporto sintassi breve: e_5 -> e_(5)
                     val = val.replace(/e_(\d+)/g, 'e_($1)');
-
-                    // Moltiplicazione Implicita 1: Numeri/ParentesiChiuse seguiti da Lettere/ParentesiAperte/e_
-                    // Esempi: 2e -> 2*e, 2( -> 2*(, )e -> )*e, )( -> )*(, 2a -> 2*a
                     val = val.replace(/([\d\)\]])\s*([a-zA-Z_\(\[])/g, '$1*$2');
-                    
-                    // Moltiplicazione Implicita 2: Variabili (a,b,d) seguite da Lettera/ParentesiAperta
-                    // Esempi: ab -> a*b, a( -> a*(, d( -> d*(
                     val = val.replace(/([abd])\s*([a-zA-Z_\(\[])/g, '$1*$2');
-                    
-                    // Moltiplicazione Implicita 3: Variabile c (esclude le keyword 'comm', 'conj', 'cnj')
-                    // Inserisce * solo se 'c' è seguito da a,b,d, numeri, parentesi o e_
                     val = val.replace(/(c)\s*([abd\(\[\d]|e_)/g, '$1*$2');
 
                     // 1. Controllo Assciatività (Ottetti/Sedenioni)
@@ -2831,8 +2890,6 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
                                 } else {
                                     valStr = parseFloat(absVal.toFixed(3));
                                 }
-
-                                // FIX: Se è un'unità immaginaria (i>0) e il valore è 1, nascondi il numero (es: +1e5 diventa +e5)
                                 if (i > 0 && valStr === 1) valStr = "";
 
                                 let term = (val < 0 ? "-" : "+") + valStr;
@@ -2889,8 +2946,6 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
             if (!isOpen) {
                 calcModal.classList.add('active');
                 calcToggle.classList.add('active');
-                
-                // FIX: Chiude sempre la cronologia all'apertura
                 historyOverlay.classList.remove('open');
                 toggleHistoryBtn.classList.remove('active');
 
@@ -2915,9 +2970,7 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
             } else {
                 // Apri
                 calcModal.classList.add('active');
-                calcToggle.classList.add('active'); // Colore blu
-                
-                // FIX: Chiude sempre la cronologia all'apertura
+                calcToggle.classList.add('active');
                 historyOverlay.classList.remove('open');
                 toggleHistoryBtn.classList.remove('active');
 
@@ -2986,14 +3039,14 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
         // --- TOUCH EVENTS (FIX TABLET) ---
         calcHeader.addEventListener('touchstart', (e) => {
             if(e.target.closest('.icon-btn') || e.target.closest('select')) return;
-            e.preventDefault(); // Blocca lo scroll della pagina mentre trascini
+            e.preventDefault();
             const touch = e.touches[0];
             startDrag(touch.clientX, touch.clientY, e);
         }, {passive: false});
 
         document.addEventListener('touchmove', (e) => {
             if (!isDragging) return;
-            e.preventDefault(); // Blocca lo scroll della pagina
+            e.preventDefault();
             const touch = e.touches[0];
             calcModal.style.left = (touch.clientX - dragOffsetX) + 'px';
             calcModal.style.top = (touch.clientY - dragOffsetY) + 'px';
@@ -3104,16 +3157,15 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
         window.addEventListener('pointerup', () => {
             if(isHoldingPoint) {
                 isHoldingPoint = false;
-                // Non serve riabilitare i controlli perché non li abbiamo disabilitati
-                filterSubspace(currentAlgState); // Ripristina la vista normale
+                filterSubspace(currentAlgState);
             }
         });
-        // ----------------------------------------------
 
-	// --- LOGICA RESIZER ORIZZONTALE PERFETTA ---
+	// --- LOGICA RESIZER ORIZZONTALE PERFETTA (Piani Fano) ---
         const tableResizer = document.getElementById('table-resizer');
-        const tableScroll = document.getElementById('table-scroll');
+        const fanoTablePanel = document.getElementById('fano-table-wrapper');
         const sidebarContent = document.getElementById('sidebar');
+        
         let isResizingTable = false;
         let startY = 0;
         let startHeight = 0;
@@ -3121,9 +3173,9 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
 
         tableResizer.addEventListener('pointerdown', (e) => {
             isResizingTable = true;
-            // Salviamo la posizione iniziale del tocco e l'altezza attuale
             startY = e.clientY;
-            startHeight = tableScroll.offsetHeight;
+            // Prendiamo l'altezza del pannello inferiore (Fano)
+            startHeight = fanoTablePanel.offsetHeight;
             
             tableResizer.classList.add('active');
             document.body.style.cursor = 'ns-resize';
@@ -3137,51 +3189,69 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
 
             animationFrameId = requestAnimationFrame(() => {
-                // Calcoliamo la differenza di movimento (delta)
                 const deltaY = e.clientY - startY;
-                let newHeight = startHeight + deltaY;
-                
-                // Limiti: min 80px, max altezza sidebar meno spazio per formule
+                let newHeight = startHeight - deltaY;
                 const sidebarHeight = sidebarContent.offsetHeight;
-                newHeight = Math.max(80, Math.min(sidebarHeight - 150, newHeight));
+                newHeight = Math.max(0, Math.min(sidebarHeight * 0.7, newHeight));
                 
-                tableScroll.style.height = newHeight + 'px';
-                // Rimuoviamo il flex per dare priorità all'altezza fissa in pixel
-                tableScroll.style.flex = "none"; 
+                // Applica l'altezza al pannello corretto
+                if (activeResizerPanel) {
+                    activeResizerPanel.style.height = newHeight + 'px';
+                    // Nasconde completamente il testo se l'altezza è quasi zero
+                    activeResizerPanel.style.display = newHeight < 5 ? 'none' : 'block';
+                }
             });
+        });
+
+        // --- RESIZER TERNE (Nuovo) ---
+        const tripletsResizer = document.getElementById('triplets-resizer');
+        const fanoTripletsPanel = document.getElementById('fano-container-wrapper');
+        let activeResizerPanel = null; // Variabile per tracciare quale pannello stiamo ridimensionando
+
+        // Listener per Resizer Tabella (Aggiornato per usare activeResizerPanel)
+        tableResizer.addEventListener('pointerdown', (e) => {
+            isResizingTable = true;
+            startY = e.clientY;
+            activeResizerPanel = fanoTablePanel; // Imposta il target
+            startHeight = activeResizerPanel.offsetHeight;
+            
+            tableResizer.classList.add('active');
+            document.body.style.cursor = 'ns-resize';
+            tableResizer.setPointerCapture(e.pointerId);
+            e.preventDefault();
+        });
+
+        // Listener per Resizer Terne
+        tripletsResizer.addEventListener('pointerdown', (e) => {
+            isResizingTable = true; // Usiamo lo stesso flag globale
+            startY = e.clientY;
+            activeResizerPanel = fanoTripletsPanel; // Imposta il target
+            startHeight = activeResizerPanel.offsetHeight;
+            
+            tripletsResizer.classList.add('active');
+            document.body.style.cursor = 'ns-resize';
+            tripletsResizer.setPointerCapture(e.pointerId);
+            e.preventDefault();
         });
 
         window.addEventListener('pointerup', (e) => {
             if (!isResizingTable) return;
             isResizingTable = false;
             document.body.style.cursor = 'default';
-            tableResizer.releasePointerCapture(e.pointerId);
-            if (animationFrameId) cancelAnimationFrame(animationFrameId);
-        });
-
-        window.addEventListener('pointerup', () => {
-            if (!isResizingTable) return;
-            isResizingTable = false;
-            document.body.style.cursor = 'default';
+            // Controllo opzionale se l'evento ha pointerId, altrimenti ignora il release
+            if(e.pointerId) {
+                try { tableResizer.releasePointerCapture(e.pointerId); } catch(err){}
+            }
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
         });
 
         // --- OTTIMIZZAZIONE LOOP DI RENDERING ---
-        let renderRequested = true; // Flag per forzare il render
-        
-        // Renderizza solo quando la camera si muove
-        controls.addEventListener('change', () => { renderRequested = true; });
-        
-        // Renderizza quando si ridimensiona la finestra
-        window.addEventListener('resize', () => { renderRequested = true; });
-        
-        // Renderizza quando si interagisce con la UI (click generico)
-        window.addEventListener('pointerup', () => { renderRequested = true; setTimeout(()=> renderRequested=true, 100); });
-        
-        // Renderizza quando si preme un tasto (es. calcolatrice)
-        window.addEventListener('keydown', () => { renderRequested = true; });
+        let renderRequested = true;
 
-        // Forza render quando cambia la UI laterale o i menu
+        controls.addEventListener('change', () => { renderRequested = true; });
+        window.addEventListener('resize', () => { renderRequested = true; });
+        window.addEventListener('pointerup', () => { renderRequested = true; setTimeout(()=> renderRequested=true, 100); });
+        window.addEventListener('keydown', () => { renderRequested = true; });
         const forceUpdate = () => { renderRequested = true; };
         document.querySelectorAll('.tab-btn, .triplet-btn, .ui-btn, .setting-action').forEach(b => {
             b.addEventListener('click', forceUpdate);
@@ -3192,8 +3262,6 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
         function animate() {
             requestAnimationFrame(animate);
 
-            // --- PROTEZIONE BUG ZOOM ---
-            // Se la camera finisce nell'infinito o diventa NaN, resetta d'emergenza
             if (isNaN(camera.position.x) || !isFinite(camera.position.x)) {
                 camera.position.copy(initialCameraPos);
                 controls.target.set(0, 3, 0);
@@ -3203,7 +3271,6 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
             const delta = Math.min(clock.getDelta(), 0.1);
             let needsRender = renderRequested;
 
-            // Se l'animazione NON è in pausa e la velocità > 0, dobbiamo renderizzare sempre
             if (!animParams.paused && animParams.speed > 0) {
                 animParams.customTime += delta * animParams.speed;
                 animatedMaterials.forEach(mat => mat.uniforms.customTime.value = animParams.customTime);
@@ -3225,15 +3292,95 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
             }
         }
         animate();
-        // Forza un render iniziale
+
         renderRequested = true;
-        
-        // Applica i colori corretti all'avvio (Ora è sicuro chiamarlo qui)
         updateCycleColors();
 
-// =============================================================
+        // =================== ZOOM TABELLA (PC & MOBILE) ==============
+
+        const tScroll = document.getElementById('table-scroll');
+        const tTable = document.getElementById('sedenion-table');
+        let tZoom = 1.0;
+
+        function applyTableZoom(targetZoom) {
+
+            const containerW = tScroll.clientWidth;
+            const currentVisualWidth = tTable.getBoundingClientRect().width;
+            const naturalWidth = currentVisualWidth / (tZoom || 1);
+
+            if (naturalWidth < 10) return; 
+
+            let minZoom = containerW / naturalWidth;
+
+            if (minZoom > 1) minZoom = 1;
+
+            // 2. APPLICAZIONE LIMITI
+
+            tZoom = Math.max(minZoom, Math.min(targetZoom, 3.0));
+            
+            // 3. APPLICAZIONE STILE
+
+            if ('zoom' in tTable.style) {
+                tTable.style.zoom = tZoom; 
+            } else {
+                // Fallback per Firefox (usa transform scale)
+                tTable.style.transform = `scale(${tZoom})`;
+                tTable.style.transformOrigin = "0 0";
+                // Corregge la larghezza in Firefox per evitare clipping
+                tTable.style.width = (100 / tZoom) + "%"; 
+            }
+        }
+
+        // 1. PC: Mouse/Trackpad sopra la tabella + Ctrl
+        tScroll.addEventListener('wheel', (e) => {
+            if (e.ctrlKey) {
+                e.preventDefault();
+                e.stopPropagation();
+                const scaleFactor = Math.exp(-e.deltaY * 0.002);
+                applyTableZoom(tZoom * scaleFactor);
+            }
+        }, { passive: false });
+
+        // 2. MOBILE: Pinch a due dita
+        let startDist = 0;
+        let startZoom = 1.0;
+
+        tScroll.addEventListener('touchstart', (e) => {
+            // Attiva solo se ci sono esattamente 2 dita (Pinch)
+            if (e.touches.length === 2) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Calcola distanza iniziale tra le due dita
+                startDist = Math.hypot(
+                    e.touches[0].pageX - e.touches[1].pageX, 
+                    e.touches[0].pageY - e.touches[1].pageY
+                );
+                startZoom = tZoom;
+            }
+        }, { passive: false });
+
+        tScroll.addEventListener('touchmove', (e) => {
+            // Continua solo se ci sono 2 dita
+            if (e.touches.length === 2) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const currentDist = Math.hypot(
+                    e.touches[0].pageX - e.touches[1].pageX, 
+                    e.touches[0].pageY - e.touches[1].pageY
+                );
+
+                if (startDist > 0) {
+                    const ratio = currentDist / startDist;
+                    applyTableZoom(startZoom * ratio);
+                }
+            }
+        }, { passive: false });
+
+
         // ================== BRACKET HIGHLIGHTER ======================
-        // =============================================================
+
         const exprInput = document.getElementById('expression-display');
         const highlightLayer = document.getElementById('highlight-layer');
 
@@ -3249,8 +3396,6 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
             // Mappa delle parentesi
             const pairs = { '(': ')', '[': ']', ')': '(', ']': '[' };
             
-            // Cerchiamo se c'è una parentesi subito PRIMA o subito DOPO il cursore
-            // Priorità: prima controlla il carattere PRIMA del cursore (comportamento standard IDE)
             let targetIdx = -1;
             if (cursor > 0 && pairs[text[cursor - 1]]) {
                 targetIdx = cursor - 1;
@@ -3287,12 +3432,9 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
                 if (idx2 === -1) isError = true;
             }
 
-            // Costruiamo l'HTML dell'overlay
-            // Dobbiamo fare l'escape dei caratteri HTML per sicurezza
             let html = '';
             for (let i = 0; i < text.length; i++) {
                 let char = text[i];
-                // Escape HTML base
                 if (char === '<') char = '&lt;';
                 else if (char === '>') char = '&gt;';
                 else if (char === '&') char = '&amp;';
@@ -3304,15 +3446,10 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
                     html += char;
                 }
             }
-            
-            // Se il testo finisce con uno spazio, l'HTML lo ignora nel rendering, quindi aggiungiamo uno zero-width space o un char invisibile
             highlightLayer.innerHTML = html;
-            
-            // Sincronizza lo scroll orizzontale
             highlightLayer.scrollLeft = exprInput.scrollLeft;
         }
 
-        // Eventi per aggiornare l'evidenziazione
         ['input', 'click', 'keyup', 'focus', 'scroll'].forEach(evt => {
             exprInput.addEventListener(evt, () => {
                 if(evt === 'scroll') {
@@ -3323,21 +3460,17 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
             });
         });
 
-// =============================================================
         // =================== SCORCIATOIE TASTIERA ====================
-        // =============================================================
 
         window.addEventListener('keydown', (e) => {
-            // Controlla se l'utente sta già scrivendo in un campo di input (es. dentro la calcolatrice)
             const activeTag = document.activeElement.tagName.toLowerCase();
             const isInputActive = (activeTag === 'input' || activeTag === 'textarea');
 
-            // --- AZIONI GLOBALI (Solo se NON si sta già scrivendo) ---
             if (!isInputActive) {
 
                 // 1. SPAZIO: Play/Pausa
                 if (e.code === 'Space') {
-                    e.preventDefault(); // Evita lo scroll della pagina
+                    e.preventDefault();
                     document.getElementById('play-pause-btn').click();
                     return;
                 }
@@ -3351,7 +3484,7 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
 
                 // 3. FRECCE SU/GIU: Controllo Velocità
                 if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-                    e.preventDefault(); // Evita scroll
+                    e.preventDefault();
                     const slider = document.getElementById('speed-slider');
                     let val = parseFloat(slider.value);
                     const step = 0.1;
@@ -3363,28 +3496,20 @@ document.getElementById('expression-display').addEventListener('keydown', (e) =>
                     }
 
                     slider.value = val.toFixed(1);
-                    // Scatena l'evento 'input' per aggiornare la variabile animParams e la label UI
                     slider.dispatchEvent(new Event('input'));
                     return;
                 }
 
                 // 4. DIGITAZIONE RAPIDA CALCOLATRICE
-                // Accetta: Lettere (a-z), Numeri (0-9), Parentesi () [], Operatori + -, Punto .
                 const allowedKeys = /^[a-zA-Z0-9\(\)\[\]\+\-\.]$/;
 
-                // Controlliamo che sia un tasto singolo (evita F1, Tab, ecc) e che sia nella lista
                 if (e.key.length === 1 && allowedKeys.test(e.key)) {
                     e.preventDefault();
-                    
-                    // Apre la calcolatrice (funzione esistente nel tuo script)
                     openCalculator();
 
                     const display = document.getElementById('expression-display');
-                    
-                    // Aggiunge il carattere digitato al valore attuale
                     display.value += e.key;
                     
-                    // Mette il focus sulla casella e sposta il cursore alla fine
                     display.focus();
                     display.setSelectionRange(display.value.length, display.value.length);
                 }
